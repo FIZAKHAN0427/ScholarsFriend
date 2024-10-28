@@ -28,6 +28,7 @@ function App() {
       }
       const data = await response.json();
       setResults(data);
+
       if (data.error && data.error.includes("not found")) {
         setResults({ status: "Not Scopus Indexed" });
       }
@@ -134,12 +135,19 @@ function App() {
                           <p>ISSN: {results.issn}</p>
                           <p>Publisher: {results.publisher}</p>
                           <p>Status: <span className="text-green-500">{results.status}</span></p>
+                          {/* Scopus Coverage Information */}
+                          {results.coverage_years && (
+                            <p>
+                              Years currently covered by Scopus: {results.coverage_years.join(", ")}
+                              {results.discontinued ? " (coverage discontinued in Scopus)" : ""}
+                            </p>
+                          )}
                           {/* Link to the journal */}
                           <p>Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a></p>
                           {/* Stats Chart Component */}
-                          <StatsChart journalId={results.id} darkMode={darkMode} />
+                          {/* <StatsChart journalId={results.id} darkMode={darkMode} /> */}
                           {/* Credibility Score Component */}
-                          <CredibilityScore journalId={results.id} darkMode={darkMode} />
+                          {/* <CredibilityScore journalId={results.id} darkMode={darkMode} /> */}
                         </>
                       )}
                     </div>

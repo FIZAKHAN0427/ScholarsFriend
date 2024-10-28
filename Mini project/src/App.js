@@ -28,6 +28,7 @@ function App() {
       }
       const data = await response.json();
       setResults(data);
+
       if (data.error && data.error.includes("not found")) {
         setResults({ status: "Not Scopus Indexed" });
       }
@@ -122,28 +123,43 @@ function App() {
                     )}
                   </div>
 
-                  {/* Results Section */}
-                  {results && (
-                    <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
-                      <h2 className="text-lg font-bold">Results:</h2>
-                      {results.status === "Not Scopus Indexed" ? (
-                        <p>Status: <span className="text-red-500">{results.status}</span></p>
-                      ) : (
-                        <>
-                          <p>Title: {results.journal_title}</p>
-                          <p>ISSN: {results.issn}</p>
-                          <p>Publisher: {results.publisher}</p>
-                          <p>Status: <span className="text-green-500">{results.status}</span></p>
-                          {/* Link to the journal */}
-                          <p>Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a></p>
-                          {/* Stats Chart Component */}
-                          <StatsChart journalId={results.id} darkMode={darkMode} />
-                          {/* Credibility Score Component */}
-                          <CredibilityScore journalId={results.id} darkMode={darkMode} />
-                        </>
-                      )}
-                    </div>
-                  )}
+{/* Results Section */}
+{results && (
+  <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
+    <h2 className="text-lg font-bold">Results:</h2>
+    {results.status === "Not Scopus Indexed" ? (
+      <p>Status: <span className="text-red-500">{results.status}</span></p>
+    ) : (
+      <>
+        <p>Title: {results.journal_title}</p>
+        <p>ISSN: {results.issn}</p>
+        <p>Publisher: {results.publisher}</p>
+        <p>Status: <span className="text-green-500">{results.status}</span></p>
+        
+        {/* Coverage Years Information */}
+        {results.coverage_years && (
+          <p>
+            Years currently covered by Scopus: {results.coverage_years}
+          </p>
+        )}
+
+        {/* Discontinued Date Information */}
+        {results.discontinued_date && (
+          <p>
+            Discontinued Date: <span className="text-orange-500">{results.discontinued_date}</span>
+          </p>
+        )}
+
+        {/* Link to the journal */}
+        <p>
+          Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a>
+        </p>
+      </>
+    )}
+  </div>
+)}
+
+
                 </div>
               </div>
 

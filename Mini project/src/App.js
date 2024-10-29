@@ -124,9 +124,10 @@ function App() {
                   </div>
 
 {/* Results Section */}
-{results && (
+                  {results && (
   <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
     <h2 className="text-lg font-bold">Results:</h2>
+    
     {results.status === "Not Scopus Indexed" ? (
       <p>Status: <span className="text-red-500">{results.status}</span></p>
     ) : (
@@ -139,25 +140,30 @@ function App() {
         {/* Coverage Years Information */}
         {results.coverage_years && (
           <p>
-            Years currently covered by Scopus: {results.coverage_years}
+            Years covered by Scopus: {results.coverage_years}
           </p>
         )}
 
         {/* Discontinued Date Information */}
-        {results.discontinued_date && (
+        {results.discontinued_date ? (
           <p>
             Discontinued Date: <span className="text-orange-500">{results.discontinued_date}</span>
           </p>
+        ) : (
+          <p>Currently Active</p>
         )}
 
         {/* Link to the journal */}
-        <p>
-          Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a>
-        </p>
+        {results.redirect_links && results.redirect_links.length > 0 && (
+          <p>
+            Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a>
+          </p>
+        )}
       </>
     )}
   </div>
 )}
+
 
 
                 </div>

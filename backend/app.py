@@ -42,17 +42,13 @@ def get_journal_status():
                     publisher_name = journal_info[0].get('dc:publisher', 'N/A')
                     links = journal_info[0].get('link', [])
                     
-                    # Check for discontinuation and set status
-                    status_text = "Scopus Indexed"
-                    discontinued_date = None
+                    # Set status and discontinuation date if applicable
+                    discontinued_date = journal_info[0].get('coverageEndYear', None)
+                    if discontinued_date:
+                        status_text = f"Scopus Indexed but discontinued from {discontinued_date}"
+                    else:
+                        status_text = "Scopus Indexed"
 
-                    # Check if the journal is discontinued
-                    for link in links:
-                        if 'discontinued' in link.get('@ref', ''):
-                            status_text = f"Scopus Indexed but discontinued from {link.get('year', 'Unknown')}"
-                            discontinued_date = link.get('year', 'Unknown')
-                            break
-                    
                     return jsonify({
                         'journal_title': journal_title,
                         'issn': issn,

@@ -41,6 +41,12 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         {/* other links */}
       </ul>
         </button>
+        <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
+        <ul>
+        <li><Link to="/fake-site-detection">Fake Site detecction</Link></li>
+        {/* other links */}
+      </ul>
+        </button>
 
         {/* Toggle for dark/light mode */}
         <label className="flex items-center cursor-pointer">

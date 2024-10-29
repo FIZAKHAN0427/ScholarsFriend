@@ -149,10 +149,21 @@ def get_journal_metrics():
         return jsonify({'error': f"An error occurred: {str(e)}"}), 500
 
 # Function to calculate credibility score
+# Function to calculate credibility score and provide a rating
 def calculate_credibility(sjr, snip, citations):
-    score = (citations * 0.4) + (sjr * 0.3) + (snip * 0.2)
-    return round(score, 2)
+    # Calculate a weighted score
+    score = (citations * 0.4) + (sjr * 0.3) + (snip * 0.3)
+    rounded_score = round(score, 2)
 
+    # Define credibility rating based on score
+    if rounded_score >= 8:
+        rating = "High"
+    elif 5 <= rounded_score < 8:
+        rating = "Medium"
+    else:
+        rating = "Low"
+
+    return rounded_score, rating
 # Run the Flask server
 if __name__ == '__main__':
     app.run(debug=True)

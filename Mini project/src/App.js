@@ -122,9 +122,9 @@ function App() {
                       </div>
                     )}
                   </div>
-
+                  
 {/* Results Section */}
-                  {results && (
+{results && (
   <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
     <h2 className="text-lg font-bold">Results:</h2>
     
@@ -159,10 +159,27 @@ function App() {
             Link: <a href={results.redirect_links[0]?.href} target="_blank" rel="noopener noreferrer" className="text-blue-500">Visit Journal</a>
           </p>
         )}
+
+        {/* Credibility Score and Rating */}
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold">Credibility:</h3>
+          {results.credibility_score != null ? (
+            <>
+              <p>Score: <span className="text-blue-500">{results.credibility_score}</span></p>
+              <p>Rating: <span className={`font-semibold ${results.credibility_rating === 'High' ? 'text-green-500' : results.credibility_rating === 'Medium' ? 'text-yellow-500' : 'text-red-500'}`}>
+                {results.credibility_rating}
+              </span></p>
+            </>
+          ) : (
+            <p className="text-gray-500">Credibility data is not available for this journal.</p>
+          )}
+        </div>
       </>
     )}
   </div>
 )}
+
+
 
 
 

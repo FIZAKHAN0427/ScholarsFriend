@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from "./Navbar";
+import FilterSidebar from './FilterSidebar'; 
 import Footer from "./Footer";
 import ResearchStep from "./ResearchStep";
 import AboutUs from "./AboutUs";
@@ -17,12 +18,20 @@ function App() {
   const [results, setResults] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [darkMode, setDarkMode] = useState(true);
+  const [filters, setFilters] = useState({
+    country: '',
+    subjectArea: '',
+    publicationYear: ''
+  });
 
   // Function to handle search action
   const handleSearch = async () => {
     if (!searchQuery) return;
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/journal?title=${encodeURIComponent(searchQuery)}`);
+      const url = new URL(`http://127.0.0.1:5000/api/journal?title=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(url);
+
+      Object.keys(filters).forEach(key => filters[key] && url.searchParams.append(key, filters[key]));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -57,6 +66,11 @@ function App() {
     }
   };
 
+    // Handle filter input
+    const handleFilterChange = (e) => {
+      const { name, value } = e.target;
+      setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+    };
   // Function to handle keypress events (Enter key triggers search)
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -122,7 +136,36 @@ function App() {
                       </div>
                     )}
                   </div>
-                  
+
+                                    {/* Filter Options */}
+                                    <div className="mt-4 flex flex-wrap justify-center gap-4">
+                    <select name="country" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Paid/Free</option>
+                      <option value="Paid/Free">Paid/Free</option>
+                      <option value="Paid">Paid</option>
+                      <option value="Free">Free</option>
+                    </select>
+                    <select name="subjectArea" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Subject Area</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Medicine">Medicine</option>
+                      <option value="Electronics">Electronics</option>
+                    </select>
+                    <select name="indexing" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Indexing</option>
+                      <option value="Scopus">Scopus</option>
+                      <option value="UGC">UGC Care</option>
+                      <option value="WoS">Web of Science</option>
+                    </select>
+                    <select name="publicationYear" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Publication Year</option>
+                      <option value="2023">2023</option>
+                      <option value="2022">2022</option>
+                      <option value="2021">2021</option>
+                    </select>
+                    <button onClick={handleSearch} className="px-4 py-2 rounded-md bg-green-500 text-white">Apply Filters</button>
+                  </div>
 {/* Results Section */}
 {results && (
   <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
@@ -192,12 +235,14 @@ function App() {
               <AssessorsAndPublishers darkMode={darkMode} />
             </>
           } />
-          <Route path="/research-steps" element={
+           {/* <Route path="/research-steps" element={
             <div className="container mx-auto mt-10 p-6">
               <h2 className={`text-3xl font-bold text-center ${darkMode ? 'text-white' : 'text-black'}`}></h2>
-              <ResearchStep />
+              <ResearchStep /> 
+              
             </div>
-          } />
+          } /> */}
+          <Route path="/research-steps" element={<ResearchStep/>} />
           <Route path="/journal-suggester" element={<JournalSuggester />} />
         </Routes>
         <Footer />

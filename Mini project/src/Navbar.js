@@ -26,11 +26,13 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           Home
         </Link>
 
-        <button 
-          onClick={handleResearchStepsClick}
-          className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}
-        >
-          Research Steps
+        <button>
+           <Link 
+           to="/research-steps" 
+           className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}
+         >
+           Research Steps
+         </Link>
         </button>
         
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>

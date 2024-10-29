@@ -165,7 +165,7 @@ const ResearchStep = () => {
                         }}
                         onClick={() => setActiveStep(index)}
                     >
-                        {isSidebarOpen ? step.title : step.title.charAt(0)} {/* Show first letter if sidebar is collapsed */}
+                        {isSidebarOpen ? step.title : step.title.charAt(5)} {/* Show first letter if sidebar is collapsed */}
                     </div>
                 ))}
             </div>

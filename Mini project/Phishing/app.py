@@ -34,16 +34,16 @@ def index():
                     y_pro_non_phishing = gbc.predict_proba(x)[0, 1]
                     
                     pred = f"It is {y_pro_phishing * 100:.2f}% safe to go"
-                    return render_template('FakeSiteDetection.js', xx=round(y_pro_non_phishing, 2), url=url)
+                    return render_template('UrlDetection.js', xx=round(y_pro_non_phishing, 2), url=url)
                 else:
-                    return render_template("FakeSiteDetection", xx=-1, error="Model could not be loaded.")
+                    return render_template("UrlDetection.js", xx=-1, error="Model could not be loaded.")
             except Exception as e:
                 print(f"Prediction error: {e}")
-                return render_template("FakeSiteDetection", xx=-1, error="Error during prediction. Please check the URL and try again.")
+                return render_template("UrlDetection.js", xx=-1, error="Error during prediction. Please check the URL and try again.")
         else:
-            return render_template("FakeSiteDetection", xx=-1, error="URL not provided")
+            return render_template("UrlDetection.js", xx=-1, error="URL not provided")
     
-    return render_template("FakeSiteDetection", xx=-1)
+    return render_template("UrlDetection.js", xx=-1)
 
 if __name__ == "__main__":
     app.run(debug=True,  port=5001)

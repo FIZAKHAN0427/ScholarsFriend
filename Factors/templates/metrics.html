@@ -1,0 +1,105 @@
+<!-- <!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Metrics Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #060415;
+            color: #fff;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .chart-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Journal Metrics Visualization</h1>
+    <div class="chart-container">
+        <canvas id="metricsChart"></canvas>
+        <div id="errorMessage" class="error"></div>
+    </div>
+    <a href="/">Go Back</a>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const issn = params.get('issn');
+
+        async function fetchMetrics() {
+            const response = await fetch(`/api/journal/metrics?issn=${issn}`);
+            const data = await response.json();
+            return data;
+        }
+
+        async function createChart() {
+            const data = await fetchMetrics();
+
+            if (data.error) {
+                document.getElementById('errorMessage').innerText = data.error;
+                return;
+            }
+
+            if (!data['serial-metadata-response']) {
+                document.getElementById('errorMessage').innerText = 'No data found for the given ISSN.';
+                return;
+            }
+
+            const entry = data['serial-metadata-response'].entry[0];
+
+            const ctx = document.getElementById('metricsChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['SJR', 'SNIP', 'CiteScore'],
+                    datasets: [{
+                        label: entry['dc:title'],
+                        data: [
+                            parseFloat(entry.SJRList.SJR[0].$),
+                            parseFloat(entry.SNIPList.SNIP[0].$),
+                            parseFloat(entry.citeScoreYearInfoList.citeScoreCurrentMetric)
+                        ],
+                        backgroundColor: ['#37ee65', '#377dee', '#f1c40f'],
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Metrics Value'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Journal Metrics Visualization'
+                        }
+                    }
+                }
+            });
+        }
+
+        createChart();
+    </script>
+</body>
+</html> -->

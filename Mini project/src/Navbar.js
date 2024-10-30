@@ -43,7 +43,14 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         </button>
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
         <ul>
-        <li><Link to="/fake-site-detection">Fake Site detecction</Link></li>
+        <li><Link to="/url-detection">Fake Site detection</Link></li>
+        {/* other links */}
+      </ul>
+        </button>
+
+        <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
+        <ul>
+        <li><Link to="/journal-metrics">Check Metrics</Link></li>
         {/* other links */}
       </ul>
         </button>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal Metrics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        padding: 5% 10%;
+        background: linear-gradient(
+          160deg,
+          #060415 0%,
+          #0f1f3a 33%,
+          #0b1332 66%,
+          #0b0b34 100%
+        );
+        color: #fff;
+        font-family: "Roboto", sans-serif;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        max-width: 600px;
+        margin: auto;
+      }
+
+      input[type="text"] {
+        padding: 15px;
+        width: 100%;
+        border-radius: 8px;
+        border: none;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #333;
+        transition: background-color 0.3s;
+      }
+
+      input[type="text"]:focus {
+        background-color: #e0e0e0;
+        outline: none;
+      }
+
+      button {
+        padding: 15px;
+        background-color: #377dee;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #330ed6;
+      }
+
+      #result {
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+      }
+
+      canvas {
+        margin-top: 20px;
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      .error {
+        color: red;
+        font-size: 1.2rem;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .quality {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .metrics-card {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .metric-title {
+        font-weight: bold;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Fetch Journal Metrics</h1>
+    <div class="container">
+      <input type="text" id="issn" placeholder="Enter ISSN" />
+      <button onclick="fetchMetrics()">Get Metrics</button>
+      <div id="result" class="metrics-card"></div>
+      <canvas id="metricsChart" width="400" height="200"></canvas>
+      <div id="quality" class="quality"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      async function fetchMetrics() {
+        const issn = document.getElementById("issn").value;
+        const resultDiv = document.getElementById("result");
+        const qualityDiv = document.getElementById("quality");
+        const ctx = document.getElementById("metricsChart").getContext("2d");
+
+        if (!issn) {
+          resultDiv.innerHTML = '<p class="error">Please enter an ISSN.</p>';
+          qualityDiv.innerHTML = "";
+          return;
+        }
+
+        const response = await fetch(`/api/journal/metrics?issn=${issn}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const entry = data["serial-metadata-response"].entry[0];
+
+          // Update result div
+          const resultHTML = `
+            <h2>Journal Metrics</h2>
+            <div class="metric-title"><strong>Title:</strong> ${entry["dc:title"]}</div>
+            <div class="metric-title"><strong>Publisher:</strong> ${entry["dc:publisher"]}</div>
+            <div class="metric-title"><strong>ISSN:</strong> ${entry["dc:identifier"]}</div>
+            <div class="metric-title"><strong>SJR:</strong> ${entry.SJRList.SJR[0].$} (Year: ${entry.SJRList.SJR[0]["@year"]})</div>
+            <div class="metric-title"><strong>SNIP:</strong> ${entry.SNIPList.SNIP[0].$} (Year: ${entry.SNIPList.SNIP[0]["@year"]})</div>
+            <div class="metric-title"><strong>CiteScore:</strong> ${entry.citeScoreYearInfoList.citeScoreCurrentMetric} (Year: ${entry.citeScoreYearInfoList.citeScoreCurrentMetricYear})</div>
+            <div class="metric-title"><strong>Coverage End Year:</strong> ${entry.coverageEndYear}</div>
+          `;
+          resultDiv.innerHTML = resultHTML;
+
+          // Prepare data for the chart
+          const metrics = [
+            entry.SJRList.SJR[0].$,
+            entry.SNIPList.SNIP[0].$,
+            entry.citeScoreYearInfoList.citeScoreCurrentMetric,
+          ];
+          const labels = ["SJR", "SNIP", "CiteScore"];
+
+          // Create the chart
+          new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "Metrics",
+                  data: metrics,
+                  backgroundColor: ["#4CAF50", "#2196F3", "#FFC107"],
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+
+          // Quality Check based on Scopus constraints
+          const citeScore = parseFloat(entry.citeScoreYearInfoList.citeScoreCurrentMetric);
+          const sjr = parseFloat(entry.SJRList.SJR[0].$);
+          const snip = parseFloat(entry.SNIPList.SNIP[0].$);
+          let qualityMessage = "This journal's quality is: ";
+
+          // Adjusted quality constraints
+          if (citeScore > 2.0 && sjr > 0.5 && snip > 1.0) {
+            qualityMessage += "<span style='color: green;'>Good Quality</span>";
+          } else {
+            qualityMessage += "<span style='color: red;'>Not Good Quality</span>";
+          }
+          qualityDiv.innerHTML = qualityMessage;
+        } else {
+          resultDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+          qualityDiv.innerHTML = "";
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear the chart
+        }
+      }
+    </script>
+  </body>
+</html>

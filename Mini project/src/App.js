@@ -8,8 +8,10 @@ import AboutUs from "./AboutUs";
 import AssessorsAndPublishers from "./AssessorsAndPublishers";
 import OurServices from './OurServices';
 import JournalSuggester from './JournalSuggester';
-import StatsChart from './StatsChart'; // Import your stats chart component
-import CredibilityScore from './CredibilityScore'; // Import your credibility score component
+import JournalMetrics from "./JournalMetrics";
+import UrlDetection from './UrlDetection';
+// import StatsChart from './StatsChart'; // Import your stats chart component
+// import CredibilityScore from './CredibilityScore'; // Import your credibility score component
 
 import './App.css';
 
@@ -140,7 +142,6 @@ function App() {
                                     {/* Filter Options */}
                                     <div className="mt-4 flex flex-wrap justify-center gap-4">
                     <select name="country" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
-                      <option value="">Paid/Free</option>
                       <option value="Paid/Free">Paid/Free</option>
                       <option value="Paid">Paid</option>
                       <option value="Free">Free</option>
@@ -204,7 +205,7 @@ function App() {
         )}
 
         {/* Credibility Score and Rating */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <h3 className="text-lg font-semibold">Credibility:</h3>
           {results.credibility_score != null ? (
             <>
@@ -216,12 +217,12 @@ function App() {
           ) : (
             <p className="text-gray-500">Credibility data is not available for this journal.</p>
           )}
-        </div>
+        </div> */}
       </>
     )}
   </div>
+  
 )}
-
 
 
 
@@ -244,6 +245,9 @@ function App() {
           } /> */}
           <Route path="/research-steps" element={<ResearchStep/>} />
           <Route path="/journal-suggester" element={<JournalSuggester />} />
+          <Route path="/url-detection" element={<UrlDetection />} />
+          <Route path="/journal-metrics" element={<JournalMetrics />} />
+          
         </Routes>
         <Footer />
       </div>

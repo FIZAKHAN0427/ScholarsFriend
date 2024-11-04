@@ -130,6 +130,30 @@ def get_journal_metrics():
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {str(e)}")  # Log the exception
         return jsonify({'error': f"An error occurred: {str(e)}"}), 500
+    
+
+
+from flask import Flask, render_template, request, jsonify
+from chat import get_response
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
+# @app.route('/', methods=['GET'])
+# def index_get():
+#     return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    text = request.get_json().get('message')
+    if not text:  # Check if text is valid
+        return jsonify({'answer': 'Please provide a message.'}), 400
+
+    response = get_response(text)
+    message = {'answer': response}
+    return jsonify(message)
+
 
 # Run the Flask server
 if __name__ == '__main__':

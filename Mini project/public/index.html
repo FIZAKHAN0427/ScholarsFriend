@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="stylesheet" href="chatbot.css">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -31,7 +32,36 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+     
+
+      
+    </div>
+    <div class="container">
+      <div class="chatbox">
+          <div class="chatbox__support">
+              <div class="chatbox__header">
+                  <div class="chatbox__image--header">
+                      <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image">
+                  </div>
+                  <div class="chatbox__content--header">
+                      <h4 class="chatbox__heading--header">Scholar AI</h4>
+                      <p class="chatbox__description--header">Hi, my name is Sam. How can I help you?</p>
+                  </div>
+              </div>
+              <div class="chatbox__messages">
+                  <div></div>
+              </div>
+              <div class="chatbox__footer">
+                  <input type="text" placeholder="Write a message...">
+                  <button class="chatbox__send--footer send__button">Send</button>
+              </div>
+          </div>
+          <div class="chatbox__button">
+              <button><img src="images/chat-icon.png" alt="Chat icon"></button>
+          </div>
+      </div>
+  </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -42,6 +72,10 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <script src="//code.tidio.co/ity6fl8v3ynjxbjrqff8f2aourb4b86l.js" async></script>
+    <!-- <script src="//code.tidio.co/ity6fl8v3ynjxbjrqff8f2aourb4b86l.js" async></script> -->
+    <script>
+      const $SCRIPT_ROOT = {{ request.script_root|tojson }};
+  </script>
+  <script type="text/javascript" src="chatbot.js"></script>
     </body>
 </html>

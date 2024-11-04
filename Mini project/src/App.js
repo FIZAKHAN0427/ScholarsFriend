@@ -10,6 +10,7 @@ import OurServices from './OurServices';
 import JournalSuggester from './JournalSuggester';
 import JournalMetrics from "./JournalMetrics";
 import UrlDetection from './UrlDetection';
+// import Chatbot from "./ChatBot";
 // import StatsChart from './StatsChart'; // Import your stats chart component
 // import CredibilityScore from './CredibilityScore'; // Import your credibility score component
 
@@ -234,6 +235,7 @@ function App() {
               <AboutUs darkMode={darkMode} />
               <OurServices />
               <AssessorsAndPublishers darkMode={darkMode} />
+              {/* <Chabot/> */}
             </>
           } />
            {/* <Route path="/research-steps" element={
@@ -247,6 +249,7 @@ function App() {
           <Route path="/journal-suggester" element={<JournalSuggester />} />
           <Route path="/url-detection" element={<UrlDetection />} />
           <Route path="/journal-metrics" element={<JournalMetrics />} />
+        
           
         </Routes>
         <Footer />

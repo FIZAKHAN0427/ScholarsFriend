@@ -12,8 +12,8 @@ body {
 }
 
 *, html {
-    --primaryGradient: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);
-    --secondaryGradient: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);
+    --primaryGradient: linear-gradient(159deg, rgba(0,51,102,1) 0%, rgba(15,82,186,1) 100%);
+    --secondaryGradient:   linear-gradient(159deg, rgba(0,51,102,1) 0%, rgba(15,82,186,1) 100%);
     --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
     --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
     --primary: #581B98;
@@ -22,7 +22,7 @@ body {
 /* CHATBOX
 =============== */
 .chatbox {
-    position: absolute;
+    position: fixed;
     bottom: 30px;
     right: 30px;
 }

@@ -136,17 +136,157 @@
       ]
     },
     {
-      "tag": "goodbye",
-      "patterns": [
-        "Bye",
-        "See you later",
-        "Goodbye"
-      ],
-      "responses": [
-        "Goodbye! Best of luck with your research.",
-        "See you later. Don't hesitate to return for more assistance!",
-        "Bye! Feel free to come back anytime you need help with research."
-      ]
-    }
+          "tag": "greeting",
+          "patterns": [
+            "Hi",
+            "Hey",
+            "How are you",
+            "Hello",
+            "Good day",
+            "Is anyone there?"
+          ],
+          "responses": [
+            "Hello! How can I assist you with your research today?",
+            "Hi there! Need help understanding research terminologies or journal metrics?",
+            "Greetings! What can I help you with in your research journey?"
+          ]
+        },
+        {
+          "tag": "goodbye",
+          "patterns": ["Bye", "See you later", "Goodbye"],
+          "responses": [
+            "Goodbye! Best of luck with your research.",
+            "See you later. Don't hesitate to return for more assistance!",
+            "Bye! Feel free to come back anytime you need help with research."
+          ]
+        },
+        {
+          "tag": "thanks",
+          "patterns": ["Thanks", "Thank you", "That's helpful", "Thanks a lot!"],
+          "responses": [
+            "You're welcome! Happy to assist.",
+            "Any time! Good luck with your work.",
+            "Glad I could help with your research!"
+          ]
+        },
+        {
+          "tag": "h_index",
+          "patterns": [
+            "What is h-index?",
+            "Explain h-index",
+            "How is h-index calculated?",
+            "Tell me about h-index"
+          ],
+          "responses": [
+            "The h-index is a metric that measures both the productivity and citation impact of a researcher or a journal. It is defined as the maximum value of h such that h articles published by the researcher have each been cited at least h times. For example, an h-index of 10 means that the researcher has 10 papers that have each been cited at least 10 times.",
+            "The h-index helps to assess the impact of a researcher’s work by considering both the number of publications and the number of citations those publications receive."
+          ]
+        },
+        {
+          "tag": "journal_metrics",
+          "patterns": [
+            "What are journal metrics?",
+            "Explain impact factor",
+            "What does h-index mean?",
+            "Tell me about citation metrics"
+          ],
+          "responses": [
+            "Journal metrics are quantitative measures that reflect the influence and quality of academic journals. Would you like to know about specific metrics like impact factor or h-index?",
+            "The impact factor is a measure of how often articles in a journal are cited. The h-index reflects both productivity and citation impact of a researcher or journal."
+          ]
+        },
+        {
+          "tag": "journal_types",
+          "patterns": [
+            "What types of journals are there?",
+            "Difference between open access and subscription journals?",
+            "What are peer-reviewed journals?",
+            "Tell me about academic journals"
+          ],
+          "responses": [
+            "Journals can be classified as open access, subscription-based, or hybrid. Peer-reviewed journals undergo a rigorous evaluation process before publication.",
+            "Open access journals are freely accessible, while subscription journals require a fee. Peer-reviewed journals ensure the quality and credibility of published research."
+          ]
+        },
+        {
+          "tag": "research_papers",
+          "patterns": [
+            "What is a research paper?",
+            "Can you explain the structure of a research paper?",
+            "What are the key components of a research paper?",
+            "Tell me about the types of research papers"
+          ],
+          "responses": [
+            "A research paper is a detailed document presenting original findings or arguments. Key components typically include an abstract, introduction, methodology, results, and discussion.",
+            "There are various types of research papers, including empirical studies, literature reviews, and theoretical papers. Each serves a different purpose in the research community."
+          ]
+        },
+        {
+          "tag": "submission_process",
+          "patterns": [
+            "How do I submit my research paper?",
+            "What is the journal submission process?",
+            "Can you explain manuscript submission?",
+            "What steps are involved in submitting a paper?"
+          ],
+          "responses": [
+            "The submission process generally involves selecting a suitable journal, preparing your manuscript according to guidelines, and submitting it online. Would you like to know more about any specific step?",
+            "After selecting a journal, you'll need to format your paper, prepare any required supplementary materials, and then use the journal's online submission system."
+          ]
+        },
+        {
+          "tag": "publishing_guidance",
+          "patterns": [
+            "How do I publish my research?",
+            "What is the process for publishing a paper?",
+            "Can you guide me on publishing research?",
+            "What steps do I need to publish my work?"
+          ],
+          "responses": [
+            "To publish your research, start by choosing a suitable journal that aligns with your field. Prepare your manuscript according to the journal's guidelines and submit it for review.",
+            "The typical steps for publishing include selecting a journal, preparing the manuscript, submitting, peer review, and, if accepted, publishing.",
+            "Once your paper is ready, submit it to a journal for peer review. After acceptance, it will proceed to publication."
+          ]
+        },
+        {
+          "tag": "research_terms",
+          "patterns": [
+            "What is a DOI?",
+            "Explain what indexing means",
+            "What does peer review entail?",
+            "Define research methodology"
+          ],
+          "responses": [
+            "A DOI, or Digital Object Identifier, is a unique alphanumeric string assigned to a document for permanent identification and easy access online.",
+            "Indexing refers to the inclusion of journals in databases that catalog their articles, which helps in improving visibility and accessibility."
+          ]
+        },
+        {
+          "tag": "citation_styles",
+          "patterns": [
+            "What are citation styles?",
+            "Explain APA and MLA formats",
+            "How do I cite a paper?",
+            "What citation styles should I use?"
+          ],
+          "responses": [
+            "Citation styles are standardized formats for documenting sources in academic writing. Common styles include APA, MLA, and Chicago.",
+            "The choice of citation style often depends on your field of study. Would you like guidance on how to use a specific style?"
+          ]
+        },
+        {
+          "tag": "goodbye",
+          "patterns": [
+            "Bye",
+            "See you later",
+            "Goodbye"
+          ],
+          "responses": [
+            "Goodbye! Best of luck with your research.",
+            "See you later. Don't hesitate to return for more assistance!",
+            "Bye! Feel free to come back anytime you need help with research."
+          ]
+        }
+    
   ]
 }

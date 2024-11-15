@@ -141,9 +141,7 @@ function App() {
                   </div>
 
                                     {/* Filter Options */}
- 
-                                    <div className="mt-4 flex flex-wrap justify-center gap-4">
-                                    <select name="country" onChange={handleFilterChange} className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+  <div className="mt-4 flex flex-wrap justify-center gap-4">
 
                     <select name="country" className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
                       <option value="Paid/Free">Paid/Free</option>
@@ -170,7 +168,7 @@ function App() {
                       <option value="2021">2021</option>
                     </select>
                     <button onClick={handleSearch} className="px-4 py-2 rounded-md bg-green-500 text-white">Apply Filters</button>
-                  </div> 
+    </div> 
 {/* Results Section */}
 {results && (
   <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>

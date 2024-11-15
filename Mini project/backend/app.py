@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import requests
 import os
+from chat import get_response
 
 app = Flask(__name__)
 CORS(app)
@@ -132,13 +133,11 @@ def get_journal_metrics():
         return jsonify({'error': f"An error occurred: {str(e)}"}), 500
     
 
+###################################################################################################################################3333333333333    
 
-from flask import Flask, render_template, request, jsonify
-from chat import get_response
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# app = Flask(__name__)
+# CORS(app)  # Enable CORS for all routes
 
 # @app.route('/', methods=['GET'])
 # def index_get():

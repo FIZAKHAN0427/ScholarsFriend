@@ -65,7 +65,7 @@ const AssessorsAndPublishers = ({ darkMode }) => {
         </div>
         <div style={{ width: '50%', overflow: 'hidden' }}>
           <img 
-            src="/images/IMG3.JPG" 
+            src="/images/IMG3.jpg" 
             alt="Assessors"
             style={{
                 width: '100%',
@@ -83,7 +83,7 @@ const AssessorsAndPublishers = ({ darkMode }) => {
       <div style={boxStyle}>
         <div style={{ width: '50%', overflow: 'hidden' }}>
           <img 
-            src="/images/IMG4.JPG" 
+            src="/images/IMG4.jpg" 
             alt="Publishers"
             style={{
                 width: '100%',

@@ -3,9 +3,19 @@ from flask_cors import CORS
 import requests
 import os
 from chat import get_response
+from cachetools import TTLCache
+import time
+import logging
+from fuzzywuzzy import fuzz
 
 app = Flask(__name__)
 CORS(app)
+
+# Initialize cache with a TTL of 10 minutes and a max size of 100 items
+cache = TTLCache(maxsize=100, ttl=600)
+
+# Set up logging to monitor API response times
+logging.basicConfig(level=logging.INFO)
 
 # Welcome message for the home route
 @app.route('/')
@@ -18,7 +28,19 @@ API_KEY = os.getenv('SCOPUS_API_KEY', 'ecd7925a3f6b0d8db8f401b0afabe1b4')  # Rep
 # Scopus Journal search API endpoint
 SCOPUS_API_JOURNAL_URL = "https://api.elsevier.com/content/serial/title"
 
-# Endpoint to search for journal status
+# Function to make requests with exponential backoff for reliability
+def fetch_with_backoff(url, params, retries=3):
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, params=params)
+            if response.status_code == 200:
+                return response
+            time.sleep(2 ** attempt)  # Exponential backoff
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Request error: {e}")
+    return None
+
+# Endpoint to search for journal status and matching journals
 @app.route('/api/journal', methods=['GET'])
 def get_journal_status():
     journal_name = request.args.get('title')
@@ -27,56 +49,39 @@ def get_journal_status():
     if not journal_name:
         return jsonify({'error': 'Journal title is required.'}), 400
     
+    # Check cache first to avoid redundant API calls
+    if journal_name in cache:
+        return jsonify(cache[journal_name])
+    
     params = {'title': journal_name, 'apiKey': API_KEY}
-    try:
-        response = requests.get(SCOPUS_API_JOURNAL_URL, params=params)
-
-        if response.status_code == 200:
-            data = response.json()
-
-            # Check if 'serial-metadata-response' is in the response
-            if 'serial-metadata-response' in data:
-                journal_info = data['serial-metadata-response'].get('entry', [])
+    response = fetch_with_backoff(SCOPUS_API_JOURNAL_URL, params)
+    if response:
+        data = response.json()
+        if 'serial-metadata-response' in data:
+            journal_info = data['serial-metadata-response'].get('entry', [])
+            if journal_info:
+                journal_title = journal_info[0].get('dc:title', 'Unknown')
+                issn = journal_info[0].get('prism:issn', 'N/A')
+                publisher_name = journal_info[0].get('dc:publisher', 'N/A')
+                links = journal_info[0].get('link', [])
                 
-                if journal_info:
-                    journal_title = journal_info[0].get('dc:title', 'Unknown')
-                    issn = journal_info[0].get('prism:issn', 'N/A')
-                    publisher_name = journal_info[0].get('dc:publisher', 'N/A')
-                    links = journal_info[0].get('link', [])
-                    
-                    # Set status and discontinuation date if applicable
-                    discontinued_date = journal_info[0].get('coverageEndYear', None)
-                    if discontinued_date:
-                        status_text = f"Scopus Indexed but discontinued from {discontinued_date}"
-                    else:
-                        status_text = "Scopus Indexed"
+                discontinued_date = journal_info[0].get('coverageEndYear', None)
+                status_text = f"Scopus Indexed but discontinued from {discontinued_date}" if discontinued_date else "Scopus Indexed"
 
-                    return jsonify({
-                        'journal_title': journal_title,
-                        'issn': issn,
-                        'publisher': publisher_name,
-                        'status': status_text,
-                        'discontinued_date': discontinued_date,
-                        'redirect_links': [{"title": link.get('title'), "href": link.get('@href')} for link in links]
-                    })
-                
-                # If no journal information found, it means it's not indexed
-                return jsonify({
-                    'journal_title': journal_name,
-                    'status': "Not Scopus Indexed"
-                }), 404
-            
-            # If no 'serial-metadata-response' found, it's not indexed
-            return jsonify({
-                'journal_title': journal_name,
-                'status': "Not Scopus Indexed"
-            }), 404
+                result = {
+                    'journal_title': journal_title,
+                    'issn': issn,
+                    'publisher': publisher_name,
+                    'status': status_text,
+                    'discontinued_date': discontinued_date,
+                    'redirect_links': [{"title": link.get('title'), "href": link.get('@href')} for link in links]
+                }
+                cache[journal_name] = result  # Store result in cache
+                return jsonify(result)
+            return jsonify({'journal_title': journal_name, 'status': "Not Scopus Indexed"}), 404
+    return jsonify({'error': "Failed to fetch data from Scopus API."}), 500
 
-        return jsonify({'error': "Failed to fetch data from Scopus API."}), response.status_code
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': f"An error occurred: {str(e)}"}), 500
-
-# Endpoint to get journal suggestions based on partial title
+# Enhanced Suggestions Algorithm with Fuzzy Matching for keyword search
 @app.route('/api/journal/suggestions', methods=['GET'])
 def get_journal_suggestions():
     partial_title = request.args.get('title')
@@ -85,26 +90,23 @@ def get_journal_suggestions():
         return jsonify({'error': 'Partial title is required.'}), 400
     
     params = {'title': partial_title, 'apiKey': API_KEY}
-    try:
-        response = requests.get(SCOPUS_API_JOURNAL_URL, params=params)
-
-        if response.status_code == 200:
-            data = response.json()
-            if 'serial-metadata-response' in data:
-                journal_info = data['serial-metadata-response'].get('entry', [])
-                suggestions = []
-                if journal_info:
-                    for journal in journal_info:
-                        suggestions.append({
-                            'journal_title': journal.get('dc:title', 'Unknown'),
-                            'issn': journal.get('prism:issn', 'N/A'),
-                        })
-                    return jsonify(suggestions)
-                return jsonify([])  # Return an empty list if no suggestions found
-            return jsonify({'error': "No journal metadata found."}), 404
-        return jsonify({'error': "Failed to fetch data from Scopus API."}), response.status_code
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': f"An error occurred: {str(e)}"}), 500
+    response = fetch_with_backoff(SCOPUS_API_JOURNAL_URL, params)
+    
+    if response:
+        data = response.json()
+        if 'serial-metadata-response' in data:
+            journal_info = data['serial-metadata-response'].get('entry', [])
+            suggestions = []
+            for journal in journal_info:
+                journal_title = journal.get('dc:title', 'Unknown')
+                issn = journal.get('prism:issn', 'N/A')
+                
+                # Fuzzy match score
+                match_score = fuzz.partial_ratio(partial_title.lower(), journal_title.lower())
+                if match_score > 70:  # Suggest only if score is reasonably high
+                    suggestions.append({'journal_title': journal_title, 'issn': issn})
+            return jsonify(suggestions)
+    return jsonify({'error': "Failed to fetch suggestions."}), 500
 
 # Endpoint to get journal metrics with credibility score
 @app.route('/api/journal/metrics', methods=['GET'])
@@ -117,42 +119,25 @@ def get_journal_metrics():
     url = f"https://api.elsevier.com/content/serial/title/issn/{issn}"
     headers = {'Accept': 'application/json', 'X-ELS-APIKey': API_KEY}
 
-    try:
-        response = requests.get(url, headers=headers)
-        
-        if response.status_code == 200:
-            return jsonify(response.json())
-        else:
-            print(f"Failed to fetch data: {response.status_code} - {response.text}")  # Log the error
-            return jsonify({
-                'error': f"Failed to fetch data from Scopus API. Status Code: {response.status_code}, Message: {response.text}"
-            }), response.status_code
-            
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {str(e)}")  # Log the exception
-        return jsonify({'error': f"An error occurred: {str(e)}"}), 500
+    response = fetch_with_backoff(url, headers=headers)
     
+    if response:
+        return jsonify(response.json())
+    else:
+        return jsonify({
+            'error': f"Failed to fetch data from Scopus API. Status Code: {response.status_code}"
+        }), 500
 
-###################################################################################################################################3333333333333    
-
-
-# app = Flask(__name__)
-# CORS(app)  # Enable CORS for all routes
-
-# @app.route('/', methods=['GET'])
-# def index_get():
-#     return render_template('index.html')
-
+# Chatbot prediction endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
     text = request.get_json().get('message')
-    if not text:  # Check if text is valid
+    if not text:
         return jsonify({'answer': 'Please provide a message.'}), 400
 
     response = get_response(text)
     message = {'answer': response}
     return jsonify(message)
-
 
 # Run the Flask server
 if __name__ == '__main__':

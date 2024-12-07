@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cloned Journal Checker</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      /* Basic styles */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      h2 {
+        margin-top: 30px;
+        color: #333;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-size: 1.1rem;
+        margin-right: 10px;
+        display: inline-block;
+      }
+
+      input[type="text"] {
+        padding: 8px;
+        font-size: 1rem;
+        width: 60%;
+        margin-right: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        outline: none;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .alert {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border-radius: 5px;
+        border: 1px solid #f5c6cb;
+      }
+
+      .table-responsive {
+        margin-top: 20px;
+        overflow-x: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table th, table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      table th {
+        background-color: #f8f9fa;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #888;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>UGC CARE Cloned Journals Checker</h1>
+
+      <form method="POST">
+        <label for="journal_name">Enter the journal name to check if it's cloned:</label>
+        <input type="text" id="journal_name" name="journal_name" required />
+        <button type="submit">Check Journal</button>
+      </form>
+
+      {% if cloned_status %}
+      <div class="alert">{{ cloned_status }}</div>
+      {% endif %}
+
+      <h2>List of Cloned Journals</h2>
+      <div class="table-responsive">{{ journal_table | safe }}</div>
+
+      <footer>&copy; 2024 Cloned Journal Checker</footer>
+    </div>
+  </body>
+</html>

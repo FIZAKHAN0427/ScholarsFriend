@@ -95,7 +95,7 @@ const JournalMetrics = () => {
           <h2>Journal Metrics</h2>
           <div style={styles.metricTitle}><strong>Title:</strong> {metricsData["dc:title"]}</div>
           <div style={styles.metricTitle}><strong>Publisher:</strong> {metricsData["dc:publisher"]}</div>
-          <div style={styles.metricTitle}><strong>ISSN:</strong> {metricsData["dc:identifier"]}</div>
+          <div style={styles.metricTitle}><strong>ISSN:</strong> {issn}</div>
           <div style={styles.metricTitle}><strong>SJR:</strong> {metricsData.SJRList.SJR[0].$} (Year: {metricsData.SJRList.SJR[0]["@year"]})</div>
           <div style={styles.metricTitle}><strong>SNIP:</strong> {metricsData.SNIPList.SNIP[0].$} (Year: {metricsData.SNIPList.SNIP[0]["@year"]})</div>
           <div style={styles.metricTitle}><strong>CiteScore:</strong> {metricsData.citeScoreYearInfoList.citeScoreCurrentMetric} (Year: {metricsData.citeScoreYearInfoList.citeScoreCurrentMetricYear})</div>

@@ -8,7 +8,7 @@ import ResearchStep from "./ResearchStep";
 import AboutUs from "./AboutUs";
 import AssessorsAndPublishers from "./AssessorsAndPublishers";
 import OurServices from './OurServices';
-import JournalSuggester from './JournalSuggester';
+import ArticleChecker from './ArticleChecker';
 import JournalMetrics from "./JournalMetrics";
 import UrlDetection from './UrlDetection';
 // import Chatbot from "./ChatBot";
@@ -183,6 +183,37 @@ function App() {
                     </div>
                   )}
 
+                                                      {/* Filter Options */}
+ 
+                                                      <div className="mt-4 flex flex-wrap justify-center gap-4">
+
+                    <select name="country" className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="Paid/Free">Paid/Free</option>
+                      <option value="Paid">Paid</option>
+                      <option value="Free">Free</option>
+                    </select>
+                    <select name="subjectArea"  className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Subject Area</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Medicine">Medicine</option>
+                      <option value="Electronics">Electronics</option>
+                    </select>
+                    <select name="indexing"  className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Indexing</option>
+                      <option value="Scopus">Scopus</option>
+                      <option value="UGC">UGC Care</option>
+                      <option value="WoS">Web of Science</option>
+                    </select>
+                    <select name="publicationYear"  className={`p-2 rounded-md ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+                      <option value="">Publication Year</option>
+                      <option value="2023">2023</option>
+                      <option value="2022">2022</option>
+                      <option value="2021">2021</option>
+                    </select>
+                    <button  className="px-4 py-2 rounded-md bg-green-500 text-white">Apply Filters</button>
+                  </div> 
+
 {/* Results Section */}
 {results && !loading && (
   <div className={`mt-6 p-4 rounded-lg shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} border border-gray-300`}>
@@ -261,7 +292,7 @@ function App() {
             </div>
           } /> */}
           <Route path="/research-steps" element={<ResearchStep/>} />
-          <Route path="/journal-suggester" element={<JournalSuggester />} />
+          <Route path="/check-article" element={<ArticleChecker />} />
           <Route path="/url-detection" element={<UrlDetection />} />
           <Route path="/journal-metrics" element={<JournalMetrics />} />
         

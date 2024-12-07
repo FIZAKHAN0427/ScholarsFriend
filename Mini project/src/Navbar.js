@@ -37,7 +37,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
         <ul>
-        <li><Link to="/journal-suggester">Journal Service</Link></li>
+        <li><Link to="/check-article">Journal Service</Link></li>
         {/* other links */}
       </ul>
         </button>

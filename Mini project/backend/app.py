@@ -7,6 +7,7 @@ from cachetools import TTLCache
 import time
 import logging
 from fuzzywuzzy import fuzz
+from scholarly import scholarly 
 
 app = Flask(__name__)
 CORS(app)
@@ -119,14 +120,20 @@ def get_journal_metrics():
     url = f"https://api.elsevier.com/content/serial/title/issn/{issn}"
     headers = {'Accept': 'application/json', 'X-ELS-APIKey': API_KEY}
 
-    response = fetch_with_backoff(url, headers=headers)
-    
-    if response:
-        return jsonify(response.json())
-    else:
-        return jsonify({
-            'error': f"Failed to fetch data from Scopus API. Status Code: {response.status_code}"
-        }), 500
+    try:
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            print(f"Failed to fetch data: {response.status_code} - {response.text}")  # Log the error
+            return jsonify({
+                'error': f"Failed to fetch data from Scopus API. Status Code: {response.status_code}, Message: {response.text}"
+            }), response.status_code
+            
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {str(e)}")  # Log the exception
+        return jsonify({'error': f"An error occurred: {str(e)}"}), 500
 
 # Chatbot prediction endpoint
 @app.route('/predict', methods=['POST'])
@@ -138,6 +145,39 @@ def predict():
     response = get_response(text)
     message = {'answer': response}
     return jsonify(message)
+
+
+
+
+@app.route('/api/check-article', methods=['POST'])
+def check_article():
+    try:
+        data = request.json
+        article_name = data.get('name', '')
+
+        if not article_name:
+            return jsonify({"error": "Article name is required"}), 400
+
+        # Query Google Scholar for the article name
+        search_results = scholarly.search_pubs(article_name)
+
+        # Get the first result if available
+        first_result = next(search_results, None)
+
+        if first_result:
+            # If a similar article is found, return the relevant details
+            return jsonify({
+                "similar": {
+                    "name": first_result['bib']['title'],
+                    "details": first_result['bib'].get('abstract', 'No abstract available')
+                }
+            })
+        else:
+            return jsonify({"similar": None})
+
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 # Run the Flask server
 if __name__ == '__main__':

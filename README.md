@@ -18,7 +18,6 @@ ScholarsFriend is an intelligent, AI-powered web application built to help resea
 - ✨ Fiza Khan
 - ✨ Shreya Joshi
 - ✨ Riya Naik
-- ✨ [Your Name]
 
 ---
 📌 **ScholarsFriend: Your trusted companion in the world of research publishing!** 🚀

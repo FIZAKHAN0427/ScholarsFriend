@@ -13,7 +13,7 @@ const Footer = ({ darkMode }) => {
         </div>
         <div className="flex items-center">
           <FaEnvelope className="mr-3 text-lg" />
-          <p>Email: crce.ce.@gmail.com</p>
+          <p>Email: scholarsfriend@gmail.com</p>
         </div>
       </div>
       

@@ -1,11 +1,8 @@
 // src/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 const Navbar = ({ darkMode, setDarkMode }) => {
-  const handleResearchStepsClick = () => {
-    window.open('/research-steps'); // Opens in a new tab
-  };
+  
 
   return (
     <nav className={`flex justify-between items-center p-4 bg-transparent`}>
@@ -37,20 +34,20 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
         <ul>
-        <li><Link to="/check-article">Journal Service</Link></li>
+        <li><Link to="/check-article">Article Title Checker</Link></li>
         {/* other links */}
       </ul>
         </button>
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
         <ul>
-        <li><Link to="/url-detection">Fake Site detection</Link></li>
+        <li><Link to="/ai-tools">AI Tools</Link></li>
         {/* other links */}
       </ul>
         </button>
 
         <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
         <ul>
-        <li><Link to="/journal-metrics">Check Metrics</Link></li>
+        <li><Link to="/journal-compare">Journal Compare</Link></li>
         {/* other links */}
       </ul>
         </button>

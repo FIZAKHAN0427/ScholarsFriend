@@ -1,132 +1,138 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const UrlDetection = () => {
-  const [url, setUrl] = useState('');
-  const [prediction, setPrediction] = useState('');
-  const [buttonVisibility, setButtonVisibility] = useState({ button1: false, button2: false });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/predict', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      const data = await response.json();
-      displayPrediction(data.prediction);
-    } catch (error) {
-      console.error('Error:', error);
-      setPrediction("An error occurred. Please try again.");
+const AITools = () => {
+  const aiTools = [
+    {
+      name: "perplexity.ai",
+      description: "A research assistant that can answer questions, summarize text, and help with various research tasks.",
+      url: "https://www.perplexity.ai/"
+    },
+    {
+      name: "hissab.io",
+      description: "A tool that can calculate anything, from simple arithmetic to complex mathematical equations.",
+      url: "https://hissab.io/"
+    },
+    {
+      name: "otter.ai",
+      description: "Software that can automatically transcribe and generate notes from audio recordings, such as lectures or meetings.",
+      url: "https://otter.ai/"
+    },
+    {
+      name: "stepwisemath.ai",
+      description: "A math tutor that can provide step-by-step solutions and explanations for a wide range of math problems.",
+      url: "https://www.stepwisemath.ai/"
+    },
+    {
+      name: "scholarcy.com",
+      description: "An article summarizer that can quickly extract the key points and insights from research papers and academic articles.",
+      url: "https://www.scholarcy.com/"
+    },
+    {
+      name: "caktus.ai",
+      description: "A comprehensive study tool that can help students with note-taking, task management, and other academic productivity features.",
+      url: "https://caktus.ai/"
+    },
+    {
+      name: "bookai.chat",
+      description: "A chatbot that can discuss and provide information about books, allowing users to engage in conversations about literature.",
+      url: "https://bookai.chat/"
+    },
+    {
+      name: "chatdoc.com",
+      description: "A tool that enables users to chat with and ask questions about various documents, such as research papers or technical manuals.",
+      url: "https://chatdoc.com/"
+    },
+    {
+      name: "textero.ai",
+      description: "An essay generator that can assist with writing tasks by providing topic ideas, outlines, and even draft text.",
+      url: "https://textero.ai/"
+    },
+    {
+      name: "jenni.ai",
+      description: "A writing assistant that can help students and researchers craft high-quality research papers and other academic documents.",
+      url: "https://jenni.ai/"
+    },
+    {
+      name: "tome.app",
+      description: "A presentation generator that can create professional-looking slides and visuals to support lectures, talks, or project presentations.",
+      url: "https://www.tome.app/"
+    },
+    {
+      name: "plaito.ai",
+      description: "A personalized tutor that can provide customized learning experiences and support for students in various subjects.",
+      url: "https://www.plaito.ai/"
+    },
+    {
+      name: "heyscience.ai",
+      description: "A research assistant that can help with literature reviews, data analysis, and other tasks related to scientific research.",
+      url: "https://heyscience.ai/"
+    },
+    {
+      name: "wisdolia.com",
+      description: "A flashcard generator that can create personalized study materials to help students memorize and retain information.",
+      url: "https://wisdolia.com/"
+    },
+    {
+      name: "duolingo.com",
+      description: "A language learning platform that uses gamification and adaptive methods to help users learn new languages effectively.",
+      url: "https://www.duolingo.com/"
+    },
+    {
+      name: "knowlj.com",
+      description: "A vocabulary learning tool that can help students expand their word knowledge and improve their language proficiency.",
+      url: "https://knowlj.com/"
+    },
+    {
+      name: "quillbot.com",
+      description: "A grammar checker and writing assistant that can identify and correct grammatical errors, improve sentence structure, and enhance the overall quality of written work.",
+      url: "https://www.quillbot.com/"
+    },
+    {
+      name: "consensus.app",
+      description: "A tool that can extract key information and answers from documents, helping users quickly find the most relevant data.",
+      url: "https://www.consensus.app/"
+    },
+    {
+      name: "knewton.com",
+      description: "An adaptive learning platform that personalizes the learning experience based on a student's strengths, weaknesses, and progress.",
+      url: "https://www.knewton.com/"
+    },
+    {
+      name: "grammarly.com",
+      description: "A comprehensive writing assistant that can detect and correct grammatical errors, improve sentence structure, and provide suggestions for enhancing the overall quality of written work.",
+      url: "https://www.grammarly.com/"
     }
-  };
-
-  const displayPrediction = (x) => {
-    if (isNaN(x) || x === -1) {
-      setPrediction("Please enter a URL to check.");
-      setButtonVisibility({ button1: false, button2: false });
-    } else {
-      let num = x * 100;
-      if (0 <= x && x < 0.50) {
-        num = 100 - num;
-        setPrediction(`Website is ${num.toFixed(2)}% unsafe to use...`);
-        setButtonVisibility({ button1: false, button2: true });
-      } else if (x <= 1 && x >= 0.50) {
-        setPrediction(`Website is ${num.toFixed(2)}% safe to use...`);
-        setButtonVisibility({ button1: true, button2: false });
-      }
-    }
-  };
-
-  const styles = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a192f, #1c1c3f)',
-      padding: '20px',
-    },
-    card: {
-      background: 'rgba(255, 255, 255, 0.1)',
-      borderRadius: '12px',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-      padding: '20px',
-      width: '100%',
-      maxWidth: '400px',
-    },
-    heading: {
-      textAlign: 'center',
-      fontSize: '2em',
-      color: '#ffffff',
-      marginBottom: '10px',
-    },
-    input: {
-      border: '1px solid #007acc',
-      borderRadius: '6px',
-      padding: '10px',
-      marginBottom: '10px',
-      width: '100%',
-      fontSize: '1em',
-    },
-    button: {
-      background: '#007acc',
-      color: '#ffffff',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '10px',
-      cursor: 'pointer',
-      transition: 'background 0.3s',
-      fontWeight: 'bold',
-      width: '100%',
-    },
-    predictionText: {
-      textAlign: 'center',
-      fontSize: '1.2em',
-      color: '#ffffff',
-      margin: '10px 0',
-    },
-    link: {
-      color: '#00aaff',
-      textDecoration: 'underline',
-    },
-  };
+  ];
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>FAKE JOURNAL URL DETECTION</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            style={styles.input}
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Enter URL"
-            required
-          />
-          <button style={styles.button} type="submit">Check here</button>
-        </form>
-        <div>
-          <h6 style={styles.predictionText}>
-            {url && <a href={url} target="_blank" rel="noopener noreferrer" style={styles.link}>{url}</a>}
-          </h6>
-          <h3 style={styles.predictionText}>{prediction}</h3>
-          {buttonVisibility.button2 && (
-            <button style={{ ...styles.button, background: '#ff4136' }} onClick={() => window.open(url)}>Still want to Continue</button>
-          )}
-          {buttonVisibility.button1 && (
-            <button style={{ ...styles.button, background: '#2ecc40' }} onClick={() => window.open(url)}>Continue</button>
-          )}
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">AI Tools for Research</h1>
+      <p className="text-lg text-center mb-10">
+        Explore these powerful AI tools to enhance your research and academic work
+      </p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {aiTools.map((tool, index) => (
+          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <a 
+              href={tool.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block p-6 h-full"
+            >
+              <div className="flex items-start h-full flex-col">
+                <h2 className="text-xl font-semibold mb-2 text-blue-600">{tool.name}</h2>
+                <p className="text-gray-700 flex-grow">{tool.description}</p>
+                <div className="mt-4 text-blue-500 font-medium text-sm">
+                  Visit Website →
+                </div>
+              </div>
+            </a>
+          </div>
+        ))}
       </div>
-      <p style={{ textAlign: 'center', color: '#ffffff', marginTop: '20px' }}>© ScholarsFriend</p>
     </div>
   );
 };
 
-export default UrlDetection;
+export default AITools;

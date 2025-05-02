@@ -33,6 +33,24 @@ OPENALEX_API = "https://api.openalex.org/works"
 # Groq API endpoint
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
+#Helper function to reconstruct abstract from inverted index
+def reconstruct_abstract(inverted_index):
+    if not inverted_index or not isinstance(inverted_index, dict):
+        return "No abstract available"
+    
+    # Create a list to hold words in their correct positions
+    max_position = max([max(positions) for positions in inverted_index.values() if positions]) + 1
+    abstract_words = [""] * max_position
+    
+    # Place each word in its correct position
+    for word, positions in inverted_index.items():
+        for pos in positions:
+            abstract_words[pos] = word
+    
+    # Join the words to form the abstract, removing empty strings
+    abstract = " ".join(word for word in abstract_words if word)
+    return abstract if abstract else "No abstract available"
+
 def fetch_with_backoff(url, params=None, headers=None, retries=3):
     """Make HTTP requests with exponential backoff"""
     for attempt in range(retries):

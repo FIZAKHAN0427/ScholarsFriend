@@ -379,7 +379,6 @@ wasabi==1.1.2
 watchdog==4.0.0
 wcwidth==0.2.13
 weasel==0.3.4
-WeatherRoutingTool @ file:///C:/Users/FIZA/OneDrive/Desktop/new/WeatherRoutingTool
 webcolors==1.13
 webencodings==0.5.1
 WebOb==1.8.8

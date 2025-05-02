@@ -105,31 +105,33 @@ const AITools = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">AI Tools for Research</h1>
-      <p className="text-lg text-center mb-10">
-        Explore these powerful AI tools to enhance your research and academic work
-      </p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {aiTools.map((tool, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <a 
-              href={tool.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="block p-6 h-full"
-            >
-              <div className="flex items-start h-full flex-col">
-                <h2 className="text-xl font-semibold mb-2 text-blue-600">{tool.name}</h2>
-                <p className="text-gray-700 flex-grow">{tool.description}</p>
-                <div className="mt-4 text-blue-500 font-medium text-sm">
-                  Visit Website →
+    <div className="min-h-screen pt-16">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">AI Tools for Research</h1>
+        <p className="text-lg text-center mb-10">
+          Explore these powerful AI tools to enhance your research and academic work
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {aiTools.map((tool, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <a 
+                href={tool.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block p-6 h-full"
+              >
+                <div className="flex items-start h-full flex-col">
+                  <h2 className="text-xl font-semibold mb-2 text-blue-600">{tool.name}</h2>
+                  <p className="text-gray-700 flex-grow">{tool.description}</p>
+                  <div className="mt-4 text-blue-500 font-medium text-sm">
+                    Visit Website →
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
-        ))}
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

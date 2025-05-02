@@ -324,3 +324,7 @@
 // };
 
 // export default OpenAlexSearch; 
+
+<div className="min-h-screen pt-16">
+  {/* ...rest of your page content... */}
+</div> 

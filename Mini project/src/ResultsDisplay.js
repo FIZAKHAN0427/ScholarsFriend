@@ -36,12 +36,24 @@ const ResultsDisplay = ({ darkMode, results, loading, error }) => {
             {currentJournals.map((result, index) => (
               <div
                 key={index}
-                className={`p-6 rounded-lg shadow-lg transition-all duration-200 ${
+                className={`relative p-6 rounded-lg shadow-lg transition-all duration-200 ${
                   darkMode 
                     ? 'bg-[#23272F] border border-[#2D333B] text-white' 
                     : 'bg-white border border-gray-200 text-gray-900'
                 }`}
               >
+                {/* Source Badge */}
+                {result.source && (
+                  <span className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold shadow ${
+                    result.source === 'Scopus'
+                      ? (darkMode ? 'bg-blue-700 text-white' : 'bg-blue-100 text-blue-700')
+                      : result.source === 'PubMed'
+                        ? (darkMode ? 'bg-green-700 text-white' : 'bg-green-100 text-green-700')
+                        : (darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700')
+                  }`}>
+                    {result.source}
+                  </span>
+                )}
                 {/* Journal Title */}
                 <h3 className={`text-xl font-bold mb-3 ${darkMode ? 'text-teal-400' : 'text-blue-600'}`}>
                   {result.journal_title || result.title || 'Journal'}

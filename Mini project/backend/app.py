@@ -10,24 +10,28 @@ from scholarly import scholarly
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from PyPDF2 import PdfReader
+from services.pubmed_service import fetch_pubmed_journals
+from groq import Groq
 
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configuration
 cache = TTLCache(maxsize=100, ttl=600)
 logging.basicConfig(level=logging.INFO)
 
 # API Keys
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
+GROQ_API_KEY = "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"
 API_KEY = os.getenv('SCOPUS_API_KEY', 'ecd7925a3f6b0d8db8f401b0afabe1b4')
 
 # API Endpoints
 SCOPUS_API_JOURNAL_URL = "https://api.elsevier.com/content/serial/title"
 OPENALEX_API = "https://api.openalex.org/works"
+
+# Groq API endpoint
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 def fetch_with_backoff(url, params=None, headers=None, retries=3):
     """Make HTTP requests with exponential backoff"""
@@ -168,7 +172,7 @@ def get_journal_status():
     }
     
     response = fetch_with_backoff(SCOPUS_API_JOURNAL_URL, params=params, headers=headers)
-    
+    scopus_results = []
     if response:
         data = response.json()
         if 'serial-metadata-response' in data:
@@ -191,9 +195,7 @@ def get_journal_status():
                 journal_info = [j for j in journal_info if in_cite_score_range(j)]
 
             if journal_info:
-                results = []
                 for journal in journal_info:
-                    # Find a link to the journal (prefer Scopus or first available)
                     links = journal.get('link', [])
                     journal_url = None
                     for link in links:
@@ -202,14 +204,11 @@ def get_journal_status():
                             break
                     if not journal_url and links:
                         journal_url = links[0].get('@href')
-
-                    # Get subject areas
                     subject_areas = []
                     if journal.get('subject-area'):
                         for area in journal.get('subject-area', []):
                             if isinstance(area, dict) and area.get('$'):
                                 subject_areas.append(area.get('$'))
-
                     result = {
                         'journal_title': journal.get('dc:title', 'Unknown'),
                         'issn': journal.get('prism:issn', 'N/A'),
@@ -223,15 +222,20 @@ def get_journal_status():
                         'links': [{"title": link.get('@ref'), "href": link.get('@href')} for link in links],
                         'journal_url': journal_url
                     }
-                    results.append(result)
-
-                # Cache the results
-                cache[cache_key] = results
-                return jsonify(results)
-            
-        return jsonify([])
-    
-    return jsonify({'error': 'Failed to fetch data from Scopus API'}), 500
+                    scopus_results.append(result)
+    # Fetch PubMed results
+    try:
+        pubmed_results = fetch_pubmed_journals(journal_name)
+        # Add 'source': 'PubMed' to each result if not already present
+        for r in pubmed_results:
+            r['source'] = 'PubMed'
+    except Exception as e:
+        pubmed_results = []
+    # Combine results
+    combined_results = scopus_results + pubmed_results
+    # Cache and return
+    cache[cache_key] = combined_results
+    return jsonify(combined_results)
 
 @app.route('/api/check-article', methods=['POST'])
 def check_article():
@@ -358,32 +362,7 @@ def summarize_pdf():
         logging.error(f"PDF summarization error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-try:
-    from groq import Groq
-    client = Groq(api_key="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")  # Replace with your actual API key
-    groq_available = True
-except ImportError:
-    groq_available = False
-    print("Groq library not available - running in fallback mode")
-except Exception as e:
-    groq_available = False
-    print(f"Error initializing Groq client: {e}")
-
-# Configuration
-GROQ_API_KEY = os.getenv("GROQ_API_KEY") or "your_groq_api_key_here"
-MODEL_NAME = "mixtral-8x7b-32768"
-
-# Initialize Groq client with better error handling
-try:
-    from groq import Groq
-    client = Groq(api_key=GROQ_API_KEY)
-    groq_available = True
-    print("Groq client initialized successfully")
-except Exception as e:
-    groq_available = False
-    print(f"Failed to initialize Groq client: {str(e)}")
-
-# Expert prompt (unchanged from your original)
+# Expert prompt
 expert_prompt = """
 You are an expert in bibliometric analysis and Scopus database with the following capabilities:
 
@@ -411,6 +390,8 @@ You are an expert in bibliometric analysis and Scopus database with the followin
    - Limitations and proper use of metrics
    - Ethical considerations in research evaluation
 
+When answering, always provide short, clear, and easily understandable responses. Avoid unnecessary jargon and keep explanations concise.
+
 Provide detailed, accurate responses with clear explanations. When appropriate:
 - Suggest specific Scopus search queries
 - Recommend analysis methodologies
@@ -418,38 +399,9 @@ Provide detailed, accurate responses with clear explanations. When appropriate:
 - Offer multiple perspectives on bibliometric questions
 """
 
-def get_response(msg):
-    """Enhanced with better error handling and debugging"""
-    if not groq_available:
-        return "The expert service is currently unavailable. Please try again later."
-    
-    if not msg or not isinstance(msg, str):
-        return "Please provide a valid message."
-
-    try:
-        print(f"Processing message: {msg}")  # Debug logging
-        
-        response = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": expert_prompt},
-                {"role": "user", "content": msg}
-            ],
-            model=MODEL_NAME,
-            temperature=0.3,
-            max_tokens=1024
-        )
-        
-        if response and response.choices:
-            return response.choices[0].message.content
-        return "Received an empty response from the service."
-        
-    except Exception as e:
-        print(f"API Error Details: {str(e)}")  # Detailed error logging
-        return "I'm having trouble connecting to the expert system. Please try again in a moment."
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Enhanced endpoint with better validation"""
+    """Enhanced endpoint with better validation and error handling"""
     if not request.is_json:
         return jsonify({'answer': 'Request must be JSON'}), 400
         
@@ -459,8 +411,47 @@ def predict():
     if not text:
         return jsonify({'answer': 'Message cannot be empty'}), 400
     
-    response = get_response(text)
-    return jsonify({'answer': response})
+    try:
+        logging.info(f"Sending request to Groq API with message: {text}")
+        
+        headers = {
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": "llama3-8b-8192",
+            "messages": [
+                {"role": "system", "content": expert_prompt},
+                {"role": "user", "content": text}
+            ],
+            "temperature": 0.3,
+            "max_completion_tokens": 1024
+        }
+        
+        response = requests.post(GROQ_API_URL, headers=headers, json=payload)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        
+        result = response.json()
+        answer = result['choices'][0]['message']['content']
+        
+        logging.info("Successfully received response from Groq API")
+        return jsonify({'answer': answer})
+        
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Request error: {str(e)}"
+        logging.error(error_msg)
+        return jsonify({
+            'answer': "I'm having trouble connecting to the expert system. Please try again in a moment.",
+            'error': error_msg
+        }), 500
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        logging.error(error_msg)
+        return jsonify({
+            'answer': "An unexpected error occurred. Please try again in a moment.",
+            'error': error_msg
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

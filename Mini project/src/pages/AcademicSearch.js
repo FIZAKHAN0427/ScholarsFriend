@@ -112,48 +112,50 @@ const AcademicSearch = ({ darkMode }) => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-[#181A20]' : 'bg-gray-50'}`}>
-      <div className="container mx-auto px-4 py-10">
-        <div className="max-w-4xl mx-auto">
-          <h1 className={`text-3xl md:text-4xl font-extrabold text-center mb-8 tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}
-            style={{ letterSpacing: '0.01em' }}>
-            <span className={darkMode ? 'text-teal-400' : 'text-blue-700'}>Academic Journal Search</span>
-          </h1>
-          <div className={`rounded-2xl shadow-2xl p-8 mb-10 transition-colors duration-300 ${darkMode ? 'bg-[#23272F] border border-[#23272F]' : 'bg-white border border-gray-200'}`}>
-            <SearchBar
-              darkMode={darkMode}
-              searchQuery={searchQuery}
-              handleInputChange={handleInputChange}
-              handleKeyDown={handleKeyDown}
-              handleSearch={handleSearch}
-              suggestions={suggestions}
-              setSearchQuery={setSearchQuery}
-              setSuggestions={setSuggestions}
-            />
-            <div className="flex justify-center mt-6">
-              <button 
-                onClick={toggleFilters}
-                className={`px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 ${
-                  darkMode 
-                    ? 'bg-teal-600 hover:bg-teal-500 text-white' 
-                    : 'bg-blue-600 hover:bg-blue-500 text-white'
-                }`}
-              >
-                {showFilters ? 'Hide Filters' : 'Show Filters'} {activeFilters > 0 && `(${activeFilters})`}
-              </button>
-            </div>
-            {showFilters && (
-              <div className="mt-6">
-                <Filters
-                  darkMode={darkMode}
-                  filters={filters}
-                  handleFilterChange={handleFilterChange}
-                  handleSearch={handleSearch}
-                  resetFilters={resetFilters}
-                />
-              </div>
-            )}
+    <div className="min-h-screen pt-16 flex flex-col items-center">
+      <div className={`w-full max-w-4xl px-4 py-10 ${darkMode ? 'bg-[#181A20]' : 'bg-gray-50'} rounded-xl shadow-lg`}>
+        <h1 className={`text-3xl md:text-4xl font-extrabold text-center mb-8 tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}
+          style={{ letterSpacing: '0.01em' }}>
+          <span className={darkMode ? 'text-teal-400' : 'text-blue-700'}>Academic Journal Search</span>
+        </h1>
+        <div className={`rounded-2xl shadow-2xl p-8 mb-10 transition-colors duration-300 ${darkMode ? 'bg-[#23272F] border border-[#23272F]' : 'bg-white border border-gray-200'}`}>
+          <SearchBar
+            darkMode={darkMode}
+            searchQuery={searchQuery}
+            handleInputChange={handleInputChange}
+            handleKeyDown={handleKeyDown}
+            handleSearch={handleSearch}
+            suggestions={suggestions}
+            setSearchQuery={setSearchQuery}
+            setSuggestions={setSuggestions}
+          />
+          <div className="flex justify-center mt-6">
+            <button 
+              onClick={toggleFilters}
+              className={`px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 ${
+                darkMode 
+                  ? 'bg-teal-600 hover:bg-teal-500 text-white' 
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
+              }`}
+            >
+              {showFilters ? 'Hide Filters' : 'Show Filters'} {activeFilters > 0 && `(${activeFilters})`}
+            </button>
           </div>
+          {showFilters && (
+            <div className="mt-6">
+              <Filters
+                darkMode={darkMode}
+                filters={filters}
+                handleFilterChange={handleFilterChange}
+                handleSearch={handleSearch}
+                resetFilters={resetFilters}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="w-full px-4 mt-8 flex justify-center">
+        <div className="w-full max-w-7xl">
           <ResultsDisplay
             darkMode={darkMode}
             results={results}

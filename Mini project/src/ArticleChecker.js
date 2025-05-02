@@ -177,252 +177,254 @@ const ArticleChecker = () => {
   };
 
   return (
-    <div className="article-checker-container">
-      <h1 className="title">Article/Journal Checker</h1>
-      <p className="subtitle">Search by keywords to check existence in Scopus database</p>
+    <div className="min-h-screen pt-16">
+      <div className="article-checker-container">
+        <h1 className="title">Article/Journal Checker</h1>
+        <p className="subtitle">Search by keywords to check existence in Scopus database</p>
 
-      <textarea
-        value={inputName}
-        onChange={handleInputChange}
-        rows={3}
-        className="input-textarea"
-        placeholder="Cryptography, Blockchain, AIML"
-      />
-      <button
-        onClick={handleCheck}
-        disabled={loading}
-        className="check-button"
-      >
-        {loading ? 'Checking...' : 'Check Existence'}
-      </button>
+        <textarea
+          value={inputName}
+          onChange={handleInputChange}
+          rows={3}
+          className="input-textarea"
+          placeholder="Cryptography, Blockchain, AIML"
+        />
+        <button
+          onClick={handleCheck}
+          disabled={loading}
+          className="check-button"
+        >
+          {loading ? 'Checking...' : 'Check Existence'}
+        </button>
 
-      {result && (
-        <div className="result-container">
-          <h3 className="result-title">Found in Database:</h3>
-          <div className="result-card">
-            <p><strong>Name:</strong> {result.name}</p>
-            {result.publisher && <p><strong>Publisher:</strong> {result.publisher}</p>}
-            {result.abstract && <p><strong>Abstract:</strong> {result.abstract}</p>}
-          </div>
-        </div>
-      )}
-
-      {suggestions.length > 0 && (
-        <div className="suggestions-container">
-          <p className="not-found">Not found in database</p>
-          <button onClick={toggleSuggestions} className="suggestions-button">
-            {showSuggestions ? 'Hide Suggestions' : 'View Suggestions'}
-          </button>
-        </div>
-      )}
-
-      {showSuggestions && suggestions.length > 0 && (
-        <div className="suggestions-section">
-          <div className="suggestions-card">
-            <h3 className="suggestions-title">Suggestions:</h3>
-            <p className="suggestion-intro">What a fascinating topic! Here are some potential article suggestions that may not be well-covered in academic databases:</p>
-            <div className="suggestion-list">
-              {suggestions.slice(0, Math.max(5, suggestions.length)).map((suggestion, index) => (
-                <div key={index} className="suggestion-item">
-                  <div className="suggestion-title">"{suggestion.title}"</div>
-                  <div className="suggestion-description">{suggestion.description}</div>
-                  <div className="suggestion-tag">Research avenue for {inputName}</div>
-                </div>
-              ))}
+        {result && (
+          <div className="result-container">
+            <h3 className="result-title">Found in Database:</h3>
+            <div className="result-card">
+              <p><strong>Name:</strong> {result.name}</p>
+              {result.publisher && <p><strong>Publisher:</strong> {result.publisher}</p>}
+              {result.abstract && <p><strong>Abstract:</strong> {result.abstract}</p>}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {error && <p className="error">{error}</p>}
+        {suggestions.length > 0 && (
+          <div className="suggestions-container">
+            <p className="not-found">Not found in database</p>
+            <button onClick={toggleSuggestions} className="suggestions-button">
+              {showSuggestions ? 'Hide Suggestions' : 'View Suggestions'}
+            </button>
+          </div>
+        )}
 
-      <style jsx>{`
-        .article-checker-container {
-          background: #1a252f;
-          border-radius: 10px;
-          padding: 40px;
-          max-width: 800px;
-          margin: 40px auto;
-          color: #ffffff;
-          font-family: Arial, sans-serif;
-        }
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="suggestions-section">
+            <div className="suggestions-card">
+              <h3 className="suggestions-title">Suggestions:</h3>
+              <p className="suggestion-intro">What a fascinating topic! Here are some potential article suggestions that may not be well-covered in academic databases:</p>
+              <div className="suggestion-list">
+                {suggestions.slice(0, Math.max(5, suggestions.length)).map((suggestion, index) => (
+                  <div key={index} className="suggestion-item">
+                    <div className="suggestion-title">"{suggestion.title}"</div>
+                    <div className="suggestion-description">{suggestion.description}</div>
+                    <div className="suggestion-tag">Research avenue for {inputName}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
-        .title {
-          font-size: 2rem;
-          font-weight: bold;
-          text-align: center;
-          margin-bottom: 10px;
-        }
+        {error && <p className="error">{error}</p>}
 
-        .subtitle {
-          font-size: 1rem;
-          text-align: center;
-          color: #a0a0a0;
-          margin-bottom: 20px;
-        }
+        <style jsx>{`
+          .article-checker-container {
+            background: #1a252f;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 40px auto;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+          }
 
-        .input-textarea {
-          width: 100%;
-          background: #2a3b47;
-          border: 2px solid #00b7eb;
-          border-radius: 5px;
-          padding: 10px;
-          color: #ffffff;
-          font-size: 1rem;
-          resize: none;
-          margin-bottom: 20px;
-        }
+          .title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+          }
 
-        .input-textarea::placeholder {
-          color: #a0a0a0;
-        }
+          .subtitle {
+            font-size: 1rem;
+            text-align: center;
+            color: #a0a0a0;
+            margin-bottom: 20px;
+          }
 
-        .input-textarea:focus {
-          outline: none;
-          border-color: #00b7eb;
-        }
+          .input-textarea {
+            width: 100%;
+            background: #2a3b47;
+            border: 2px solid #00b7eb;
+            border-radius: 5px;
+            padding: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 20px;
+          }
 
-        .check-button {
-          width: 100%;
-          background: #00b7eb;
-          color: #ffffff;
-          border: none;
-          border-radius: 5px;
-          padding: 12px;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
+          .input-textarea::placeholder {
+            color: #a0a0a0;
+          }
 
-        .check-button:hover:not(:disabled) {
-          background: #0099cc;
-        }
+          .input-textarea:focus {
+            outline: none;
+            border-color: #00b7eb;
+          }
 
-        .check-button:disabled {
-          background: #666;
-          cursor: not-allowed;
-        }
+          .check-button {
+            width: 100%;
+            background: #00b7eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+          }
 
-        .result-container {
-          margin-top: 20px;
-        }
+          .check-button:hover:not(:disabled) {
+            background: #0099cc;
+          }
 
-        .result-title {
-          font-size: 1.5rem;
-          margin-bottom: 10px;
-        }
+          .check-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+          }
 
-        .result-card {
-          background: #2a3b47;
-          padding: 15px;
-          border-radius: 5px;
-          border-left: 4px solid #00b7eb;
-        }
+          .result-container {
+            margin-top: 20px;
+          }
 
-        .result-card p {
-          margin: 5px 0;
-          color: #e0e0e0;
-        }
+          .result-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+          }
 
-        .suggestions-container {
-          margin-top: 20px;
-          text-align: center;
-        }
+          .result-card {
+            background: #2a3b47;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #00b7eb;
+          }
 
-        .not-found {
-          color: #ff6666;
-          font-size: 1.1rem;
-          margin-bottom: 10px;
-        }
+          .result-card p {
+            margin: 5px 0;
+            color: #e0e0e0;
+          }
 
-        .suggestions-button {
-          padding: 10px 20px;
-          background: #ff6666;
-          color: #ffffff;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
+          .suggestions-container {
+            margin-top: 20px;
+            text-align: center;
+          }
 
-        .suggestions-button:hover {
-          background: #ff4d4d;
-        }
+          .not-found {
+            color: #ff6666;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+          }
 
-        .suggestions-section {
-          margin-top: 25px;
-          animation: fadeIn 0.4s ease;
-        }
+          .suggestions-button {
+            padding: 10px 20px;
+            background: #ff6666;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+          }
 
-        .suggestions-card {
-          background: #2a3b47;
-          padding: 20px;
-          border-radius: 8px;
-          border-left: 4px solid #ff6666;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+          .suggestions-button:hover {
+            background: #ff4d4d;
+          }
 
-        .suggestions-title {
-          color: #ff6666;
-          font-size: 1.5rem;
-          margin-top: 0;
-          margin-bottom: 15px;
-        }
+          .suggestions-section {
+            margin-top: 25px;
+            animation: fadeIn 0.4s ease;
+          }
 
-        .suggestion-intro {
-          color: #e0e0e0;
-          margin-bottom: 20px;
-          line-height: 1.5;
-        }
+          .suggestions-card {
+            background: #2a3b47;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6666;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          }
 
-        .suggestion-list {
-          padding: 0;
-          margin: 0;
-        }
+          .suggestions-title {
+            color: #ff6666;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+          }
 
-        .suggestion-item {
-          margin-bottom: 25px;
-          padding: 15px;
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 5px;
-          border-left: 3px solid #00b7eb;
-        }
+          .suggestion-intro {
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            line-height: 1.5;
+          }
 
-        .suggestion-title {
-          color: #00b7eb;
-          font-weight: bold;
-          font-size: 1.1rem;
-          margin-bottom: 8px;
-        }
+          .suggestion-list {
+            padding: 0;
+            margin: 0;
+          }
 
-        .suggestion-description {
-          color: #e0e0e0;
-          line-height: 1.5;
-          margin-bottom: 10px;
-        }
-        
-        .suggestion-tag {
-          display: inline-block;
-          background: rgba(0, 183, 235, 0.15);
-          color: #a0a0a0;
-          padding: 4px 10px;
-          border-radius: 12px;
-          font-size: 0.8rem;
-          margin-top: 5px;
-        }
+          .suggestion-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border-left: 3px solid #00b7eb;
+          }
 
-        .error {
-          color: #ff6666;
-          margin-top: 20px;
-          text-align: center;
-          font-size: 1rem;
-        }
+          .suggestion-title {
+            color: #00b7eb;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+          }
 
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+          .suggestion-description {
+            color: #e0e0e0;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+          
+          .suggestion-tag {
+            display: inline-block;
+            background: rgba(0, 183, 235, 0.15);
+            color: #a0a0a0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+          }
+
+          .error {
+            color: #ff6666;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1rem;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
+      </div>
     </div>
   );
 };

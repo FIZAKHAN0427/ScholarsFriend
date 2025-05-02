@@ -239,177 +239,179 @@ const JournalMetrics = () => {
     const bestJournalIndex = determineBestJournal();
 
     return (
-        <div className="journal-compare-container">
-            <div className="journal-compare-header">
-                <div className="brand-container">
-                    <div className="brand-logo">JC</div>
-                    <h1 className="brand-title">Journal<span>Compare</span></h1>
+        <div className="min-h-screen pt-16">
+            <div className="journal-compare-container">
+                <div className="journal-compare-header">
+                    <div className="brand-container">
+                        <div className="brand-logo">JC</div>
+                        <h1 className="brand-title">Journal<span>Compare</span></h1>
+                    </div>
+                    <p className="journal-compare-subtitle">
+                        Compare academic journals side-by-side using key impact metrics
+                    </p>
                 </div>
-                <p className="journal-compare-subtitle">
-                    Compare academic journals side-by-side using key impact metrics
-                </p>
-            </div>
-            
-            <div className="action-buttons">
-                <button onClick={addJournal} className="add-journal-button">
-                    <span className="button-icon">+</span> Add Journal
-                </button>
-                <button onClick={handleReset} className="reset-button">
-                    <span className="button-icon">↻</span> Reset
-                </button>
-            </div>
-            
-            <div className="journal-cards-container">
-                {journals.map((journal, index) => (
-                    <div key={index} className="journal-card-input">
-                        <div className="journal-card-header">
-                            <span className="journal-number">Journal #{index + 1}</span>
-                            {journals.length > 2 && (
-                                <button 
-                                    onClick={() => removeJournal(index)} 
-                                    className="remove-journal-button"
-                                >
-                                    ✕
-                                </button>
-                            )}
-                        </div>
-                        <div className="input-group">
-                            <div className="issn-input-container">
-                                <label htmlFor={`issn-${index}`} className="input-label">ISSN</label>
-                                <input
-                                    id={`issn-${index}`}
-                                    type="text"
-                                    value={journal.issn}
-                                    onChange={(e) => updateJournal(index, { issn: e.target.value, title: journal.issn ? '' : journal.title })}
-                                    placeholder="e.g., 2078-2489"
-                                    className="issn-input"
-                                    disabled={journal.title.trim() !== ''}
-                                />
-                            </div>
-                            <div className="issn-input-container">
-                                <label htmlFor={`title-${index}`} className="input-label">Journal Title</label>
-                                <input
-                                    id={`title-${index}`}
-                                    type="text"
-                                    value={journal.title}
-                                    onChange={(e) => updateJournal(index, { title: e.target.value, issn: journal.title ? '' : journal.issn })}
-                                    placeholder="e.g., Nature"
-                                    className="issn-input"
-                                    disabled={journal.issn.trim() !== ''}
-                                />
-                            </div>
-                        </div>
-                        
-                        {journal.error && (
-                            <div className="error-message">
-                                {journal.error}
-                            </div>
-                        )}
-
-                        {journal.metrics && (
-                            <div className={`journal-result-card ${bestJournalIndex === index ? 'best-journal' : ''}`}>
-                                {bestJournalIndex === index && (
-                                    <div className="best-badge">
-                                        TOP CHOICE
-                                    </div>
+                
+                <div className="action-buttons">
+                    <button onClick={addJournal} className="add-journal-button">
+                        <span className="button-icon">+</span> Add Journal
+                    </button>
+                    <button onClick={handleReset} className="reset-button">
+                        <span className="button-icon">↻</span> Reset
+                    </button>
+                </div>
+                
+                <div className="journal-cards-container">
+                    {journals.map((journal, index) => (
+                        <div key={index} className="journal-card-input">
+                            <div className="journal-card-header">
+                                <span className="journal-number">Journal #{index + 1}</span>
+                                {journals.length > 2 && (
+                                    <button 
+                                        onClick={() => removeJournal(index)} 
+                                        className="remove-journal-button"
+                                    >
+                                        ✕
+                                    </button>
                                 )}
-                                
-                                <div className="journal-info">
-                                    <h3 className="journal-title">
-                                        {journal.metrics.preferredName || journal.metrics['dc:title'] || 'Journal'}
-                                    </h3>
-                                    <div className="journal-details">
-                                        <span className="publisher">
-                                            {journal.metrics.publisherName || 'Unknown Publisher'}
-                                        </span>
-                                        <span className="issn-display">
-                                            ISSN: {journal.metrics['prism:issn'] || journal.issn || 'N/A'}
-                                        </span>
-                                    </div>
+                            </div>
+                            <div className="input-group">
+                                <div className="issn-input-container">
+                                    <label htmlFor={`issn-${index}`} className="input-label">ISSN</label>
+                                    <input
+                                        id={`issn-${index}`}
+                                        type="text"
+                                        value={journal.issn}
+                                        onChange={(e) => updateJournal(index, { issn: e.target.value, title: journal.issn ? '' : journal.title })}
+                                        placeholder="e.g., 2078-2489"
+                                        className="issn-input"
+                                        disabled={journal.title.trim() !== ''}
+                                    />
                                 </div>
-                                
-                                <div className="metrics-container">
-                                    <div className="metrics-grid">
-                                        <div className="metric-item">
-                                            <div className="metric-value">
-                                                {journal.metrics?.citeScoreYearInfoList?.citeScoreCurrentMetric || "N/A"}
-                                            </div>
-                                            <div className="metric-label">
-                                                CiteScore 
-                                                <span className="metric-year">
-                                                    ({journal.metrics?.citeScoreYearInfoList?.citeScoreCurrentMetricYear || "N/A"})
-                                                </span>
-                                            </div>
+                                <div className="issn-input-container">
+                                    <label htmlFor={`title-${index}`} className="input-label">Journal Title</label>
+                                    <input
+                                        id={`title-${index}`}
+                                        type="text"
+                                        value={journal.title}
+                                        onChange={(e) => updateJournal(index, { title: e.target.value, issn: journal.title ? '' : journal.issn })}
+                                        placeholder="e.g., Nature"
+                                        className="issn-input"
+                                        disabled={journal.issn.trim() !== ''}
+                                    />
+                                </div>
+                            </div>
+                            
+                            {journal.error && (
+                                <div className="error-message">
+                                    {journal.error}
+                                </div>
+                            )}
+
+                            {journal.metrics && (
+                                <div className={`journal-result-card ${bestJournalIndex === index ? 'best-journal' : ''}`}>
+                                    {bestJournalIndex === index && (
+                                        <div className="best-badge">
+                                            TOP CHOICE
                                         </div>
-                                        <div className="metric-item">
-                                            <div className="metric-value">
-                                                {journal.metrics?.SJRList?.SJR[0]?.$ || "N/A"}
-                                            </div>
-                                            <div className="metric-label">
-                                                SJR 
-                                                <span className="metric-year">
-                                                    ({journal.metrics?.SJRList?.SJR[0]?.["@year"] || "N/A"})
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="metric-item">
-                                            <div className="metric-value">
-                                                {journal.metrics?.SNIPList?.SNIP[0]?.$ || "N/A"}
-                                            </div>
-                                            <div className="metric-label">
-                                                SNIP 
-                                                <span className="metric-year">
-                                                    ({journal.metrics?.SNIPList?.SNIP[0]?.["@year"] || "N/A"})
-                                                </span>
-                                            </div>
+                                    )}
+                                    
+                                    <div className="journal-info">
+                                        <h3 className="journal-title">
+                                            {journal.metrics.preferredName || journal.metrics['dc:title'] || 'Journal'}
+                                        </h3>
+                                        <div className="journal-details">
+                                            <span className="publisher">
+                                                {journal.metrics.publisherName || 'Unknown Publisher'}
+                                            </span>
+                                            <span className="issn-display">
+                                                ISSN: {journal.metrics['prism:issn'] || journal.issn || 'N/A'}
+                                            </span>
                                         </div>
                                     </div>
                                     
-                                    <div 
-                                        className="journal-recommendation"
-                                        style={{
-                                            color: getQualityColor(checkQuality(journal.metrics)),
-                                            backgroundColor: getQualityBgColor(checkQuality(journal.metrics))
-                                        }}
-                                    >
-                                        {checkQuality(journal.metrics)}
+                                    <div className="metrics-container">
+                                        <div className="metrics-grid">
+                                            <div className="metric-item">
+                                                <div className="metric-value">
+                                                    {journal.metrics?.citeScoreYearInfoList?.citeScoreCurrentMetric || "N/A"}
+                                                </div>
+                                                <div className="metric-label">
+                                                    CiteScore 
+                                                    <span className="metric-year">
+                                                        ({journal.metrics?.citeScoreYearInfoList?.citeScoreCurrentMetricYear || "N/A"})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="metric-item">
+                                                <div className="metric-value">
+                                                    {journal.metrics?.SJRList?.SJR[0]?.$ || "N/A"}
+                                                </div>
+                                                <div className="metric-label">
+                                                    SJR 
+                                                    <span className="metric-year">
+                                                        ({journal.metrics?.SJRList?.SJR[0]?.["@year"] || "N/A"})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="metric-item">
+                                                <div className="metric-value">
+                                                    {journal.metrics?.SNIPList?.SNIP[0]?.$ || "N/A"}
+                                                </div>
+                                                <div className="metric-label">
+                                                    SNIP 
+                                                    <span className="metric-year">
+                                                        ({journal.metrics?.SNIPList?.SNIP[0]?.["@year"] || "N/A"})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div 
+                                            className="journal-recommendation"
+                                            style={{
+                                                color: getQualityColor(checkQuality(journal.metrics)),
+                                                backgroundColor: getQualityBgColor(checkQuality(journal.metrics))
+                                            }}
+                                        >
+                                            {checkQuality(journal.metrics)}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="chart-container">
+                                        <canvas id={`chart-${index}`} className="journal-chart"></canvas>
                                     </div>
                                 </div>
-                                
-                                <div className="chart-container">
-                                    <canvas id={`chart-${index}`} className="journal-chart"></canvas>
+                            )}
+                            
+                            {journal.loading && (
+                                <div className="loading-message">
+                                    <div className="loading-spinner-small"></div>
+                                    <span>Loading journal data...</span>
                                 </div>
-                            </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+                
+                <div className="compare-button-container">
+                    <button 
+                        onClick={fetchAllMetrics} 
+                        className="compare-all-button"
+                        disabled={isComparing}
+                    >
+                        {isComparing ? (
+                            <>
+                                <div className="loading-spinner"></div>
+                                <span>Comparing...</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="button-icon">🔍</span>
+                                <span>Compare All Journals</span>
+                            </>
                         )}
-                        
-                        {journal.loading && (
-                            <div className="loading-message">
-                                <div className="loading-spinner-small"></div>
-                                <span>Loading journal data...</span>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-            
-            <div className="compare-button-container">
-                <button 
-                    onClick={fetchAllMetrics} 
-                    className="compare-all-button"
-                    disabled={isComparing}
-                >
-                    {isComparing ? (
-                        <>
-                            <div className="loading-spinner"></div>
-                            <span>Comparing...</span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="button-icon">🔍</span>
-                            <span>Compare All Journals</span>
-                        </>
-                    )}
-                </button>
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -43,13 +43,15 @@ def fetch_pubmed_journals(query):
                     results.append({
                         'journal_title': title,
                         'issn': summary.get('issn', 'N/A'),
+                        'eissn': summary.get('eissn', 'N/A'),
                         'publisher': summary.get('publishername', 'N/A'),
                         'subjects': summary.get('pubtype', ['Medical'])[0],
                         'impact_factor': "Not Available",
                         'status': "PubMed Indexed",
                         'open_access': summary.get('fulljournalname', '').lower().find('open') > -1,
                         'source': "PubMed",
-                        'redirect_links': [{"title": "PubMed", "href": f"{PUBMED_BASE_URL}/{journal_id}"}]
+                        'redirect_links': [{"title": "PubMed", "href": f"{PUBMED_BASE_URL}/{journal_id}"}],
+                        'journal_url': f"{PUBMED_BASE_URL}/{journal_id}"
                     })
                 except Exception as e:
                     logger.error(f"Error processing PubMed journal ID {journal_id}: {e}")
@@ -85,13 +87,15 @@ def fetch_pubmed_journals(query):
                     results.append({
                         'journal_title': title,
                         'issn': 'N/A',  # ISSN not available in search results
+                        'eissn': 'N/A',
                         'publisher': 'N/A',
                         'subjects': "Medical",
                         'impact_factor': "Not Available",
                         'status': "PubMed Indexed",
                         'open_access': False,  # Default, can be refined
                         'source': "PubMed",
-                        'redirect_links': [{"title": "PubMed", "href": link}]
+                        'redirect_links': [{"title": "PubMed", "href": link}],
+                        'journal_url': link
                     })
                 except Exception as e:
                     logger.error(f"Error parsing a PubMed journal entry: {e}")

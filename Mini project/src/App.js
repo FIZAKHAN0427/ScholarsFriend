@@ -8,6 +8,7 @@ import ArticleChecker from "./ArticleChecker";
 import JournalMetrics from "./JournalMetrics";
 import UrlDetection from "./UrlDetection";
 import AcademicSearch from "./pages/AcademicSearch";
+import Chat from "./components/Chat";
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/journal-compare" element={<JournalMetrics darkMode={darkMode} />} />
           <Route path="/academic-search" element={<AcademicSearch darkMode={darkMode} />} />
         </Routes>
+        <Chat />
         <Footer darkMode={darkMode} />
       </div>
     </Router>

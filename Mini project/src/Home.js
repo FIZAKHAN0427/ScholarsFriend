@@ -1,119 +1,92 @@
-import React, { useState } from 'react';
-import SearchBar from './SearchBar';
-import Filters from './Filters';
-import ResultsDisplay from './ResultsDisplay';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import AboutUs from './AboutUs';
 import OurServices from './OurServices';
 import AssessorsAndPublishers from './AssessorsAndPublishers';
 
 const Home = ({ darkMode }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [filters, setFilters] = useState({
-    country: '',
-    subjectArea: '',
-    indexing: '',
-    publicationYear: '',
-    citeScoreMin: '',
-    citeScoreMax: '',
-    openAccess: ''
-  });
-  const [loading, setLoading] = useState(false);
-
-  const handleSearch = async () => {
-    if (!searchQuery) return;
-    setLoading(true);
-    try {
-      const apiUrl = new URL(`http://127.0.0.1:5000/api/journal?title=${encodeURIComponent(searchQuery)}`);
-      Object.keys(filters).forEach(key => filters[key] && apiUrl.searchParams.append(key, filters[key]));
-
-      const response = await fetch(apiUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = async (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    if (query) {
-      try {
-        const response = await fetch(`http://127.0.0.1:5000/api/journal/suggestions?title=${encodeURIComponent(query)}`);
-        if (response.ok) {
-          const data = await response.json();
-          setSuggestions(data);
-        } else {
-          console.error("Failed to fetch suggestions:", response.statusText);
-          setSuggestions([]);
-        }
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        setSuggestions([]);
-      }
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   return (
-    <>
-      <div className="bg-cover bg-center h-60 flex items-center justify-center">
-        <h1 className={`text-5xl font-bold text-center p-6`}>
-          Your Trusted Partner<br />for Genuine Research Platforms and Publishers
-        </h1>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <div className={`bg-cover bg-center h-[60vh] flex items-center justify-center relative ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative z-10 text-center px-4">
+          <h1 className={`text-4xl md:text-6xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+            Your Trusted Partner<br />for Genuine Research Platforms and Publishers
+          </h1>
+          <Link 
+            to="/academic-search"
+            className={`inline-block px-8 py-3 rounded-lg text-lg font-semibold transition-colors duration-200 ${
+              darkMode 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}
+          >
+            Start Your Search
+          </Link>
+        </div>
       </div>
 
-      <div className="flex justify-center items-center mt-10">
-        <div className="container mx-auto p-10 relative">
-          <h2 className="text-2xl font-bold text-center mb-4">SEARCH FOR A JOURNAL</h2>
-          <SearchBar
-            darkMode={darkMode}
-            searchQuery={searchQuery}
-            handleInputChange={handleInputChange}
-            handleKeyDown={handleKeyDown}
-            handleSearch={handleSearch}
-            suggestions={suggestions}
-            setSearchQuery={setSearchQuery}
-            setSuggestions={setSuggestions}
-          />
-          {/* <Filters
-            darkMode={darkMode}
-            filters={filters}
-            handleFilterChange={handleFilterChange}
-            handleSearch={handleSearch}
-          /> */}
-          <ResultsDisplay
-            darkMode={darkMode}
-            results={results}
-            loading={loading}
-          />
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Research Steps</h2>
+            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Follow our comprehensive guide to navigate through the research process effectively.
+            </p>
+            <Link 
+              to="/research-steps"
+              className={`inline-block px-4 py-2 rounded-md transition-colors duration-200 ${
+                darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300 text-black'
+              }`}
+            >
+              Learn More
+            </Link>
+          </div>
+
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Article Checker</h2>
+            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Verify the authenticity and quality of research articles with our advanced checking tools.
+            </p>
+            <Link 
+              to="/check-article"
+              className={`inline-block px-4 py-2 rounded-md transition-colors duration-200 ${
+                darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300 text-black'
+              }`}
+            >
+              Check Articles
+            </Link>
+          </div>
+
+          <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Journal Metrics</h2>
+            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Compare and analyze journal metrics to make informed publishing decisions.
+            </p>
+            <Link 
+              to="/journal-compare"
+              className={`inline-block px-4 py-2 rounded-md transition-colors duration-200 ${
+                darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300 text-black'
+              }`}
+            >
+              Compare Journals
+            </Link>
+          </div>
         </div>
       </div>
 
       <AboutUs darkMode={darkMode} />
       <OurServices />
       <AssessorsAndPublishers darkMode={darkMode} />
-    </>
+    </div>
   );
 };
 

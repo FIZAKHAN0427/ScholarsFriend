@@ -1,56 +1,61 @@
 // src/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-const Navbar = ({ darkMode, setDarkMode }) => {
-  
 
+const Navbar = ({ darkMode, setDarkMode }) => {
   return (
-    <nav className={`flex justify-between items-center p-4 bg-transparent`}>
+    <nav className={`flex justify-between items-center p-4 ${darkMode ? 'bg-gray-900' : 'bg-white'} shadow-md`}>
       {/* Logo Section */}
       <div className="flex items-center">
         <img 
           src={darkMode ? '/images/image22.png' : '/images/image.png'} 
           alt="Logo"
-          className="h-12.1 w-auto" 
+          className="h-12 w-auto" 
         />
       </div>
       
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-6">
         <Link 
           to="/" 
-          className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
         >
           Home
         </Link>
 
-        <button>
-           <Link 
-           to="/research-steps" 
-           className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}
-         >
-           Research Steps
-         </Link>
-        </button>
+        <Link 
+          to="/research-steps" 
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
+        >
+          Research Steps
+        </Link>
         
-        <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
-        <ul>
-        <li><Link to="/check-article">Article Title Checker</Link></li>
-        {/* other links */}
-      </ul>
-        </button>
-        <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
-        <ul>
-        <li><Link to="/ai-tools">AI Tools</Link></li>
-        {/* other links */}
-      </ul>
-        </button>
+        <Link 
+          to="/check-article"
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
+        >
+          Article Checker
+        </Link>
 
-        <button className={`hover:text-blue-400 ${darkMode ? 'text-gray-300' : 'text-black'}`}>
-        <ul>
-        <li><Link to="/journal-compare">Journal Compare</Link></li>
-        {/* other links */}
-      </ul>
-        </button>
+        <Link 
+          to="/ai-tools"
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
+        >
+          AI Tools
+        </Link>
+
+        <Link 
+          to="/journal-compare"
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
+        >
+          Journal Compare
+        </Link>
+
+        <Link 
+          to="/academic-search"
+          className={`hover:text-blue-500 transition-colors duration-200 ${darkMode ? 'text-gray-300' : 'text-gray-800'}`}
+        >
+          Academic Search
+        </Link>
 
         {/* Toggle for dark/light mode */}
         <label className="flex items-center cursor-pointer">

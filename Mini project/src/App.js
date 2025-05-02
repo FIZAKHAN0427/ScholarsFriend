@@ -7,6 +7,8 @@ import ResearchStep from "./ResearchStep";
 import ArticleChecker from "./ArticleChecker";
 import JournalMetrics from "./JournalMetrics";
 import UrlDetection from "./UrlDetection";
+import OpenAlexSearch from "./components/OpenAlexSearch";
+import AcademicSearch from "./pages/AcademicSearch";
 import './App.css';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
           <Route path="/check-article" element={<ArticleChecker />} />
           <Route path="/ai-tools" element={<UrlDetection />} />
           <Route path="/journal-compare" element={<JournalMetrics />} />
+          <Route path="/search" element={<OpenAlexSearch darkMode={darkMode} />} />
+          <Route path="/academic-search" element={<AcademicSearch darkMode={darkMode} />} />
         </Routes>
         <Footer />
       </div>

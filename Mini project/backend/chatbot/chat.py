@@ -1,61 +1,76 @@
-import random
 import json
+from groq import Groq
 
-import torch
+# Initialize Groq client
+client = Groq(api_key="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")  # Replace with your actual API key
 
-from model import NeuralNet
-from nltk_utils import bag_of_words, tokenize
+bot_name = "Bibliometric Expert"
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# Expert prompt for bibliometric and Scopus expertise
+expert_prompt = """
+You are an expert in bibliometric analysis and Scopus database with the following capabilities:
 
-with open('intents.json', 'r') as json_data:
-    intents = json.load(json_data)
+1. Deep knowledge of bibliometric indicators:
+   - h-index, g-index, m-index
+   - Citation counts and normalized metrics (FWCI)
+   - Journal metrics: CiteScore, SJR, SNIP
+   - Collaboration metrics and co-authorship patterns
 
-FILE = "data.pth"
-data = torch.load(FILE)
+2. Scopus database expertise:
+   - Advanced search query construction
+   - Affiliation identification and disambiguation
+   - Author profile analysis
+   - Document search strategies
 
-input_size = data["input_size"]
-hidden_size = data["hidden_size"]
-output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
-model_state = data["model_state"]
+3. Research evaluation:
+   - Comparative analysis of research outputs
+   - Trend analysis in scientific publications
+   - Research impact assessment
+   - Identification of emerging topics
 
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval()
+4. Practical guidance:
+   - How to use Scopus effectively
+   - Interpreting bibliometric data
+   - Limitations and proper use of metrics
+   - Ethical considerations in research evaluation
 
-bot_name = "Sam"
+Provide detailed, accurate responses with clear explanations. When appropriate:
+- Suggest specific Scopus search queries
+- Recommend analysis methodologies
+- Explain complex concepts in accessible terms
+- Offer multiple perspectives on bibliometric questions
+"""
 
 def get_response(msg):
-    sentence = tokenize(msg)
-    X = bag_of_words(sentence, all_words)
-    X = X.reshape(1, X.shape[0])
-    X = torch.from_numpy(X).to(device)
-
-    output = model(X)
-    _, predicted = torch.max(output, dim=1)
-
-    tag = tags[predicted.item()]
-
-    probs = torch.softmax(output, dim=1)
-    prob = probs[0][predicted.item()]
-    if prob.item() > 0.75:
-        for intent in intents['intents']:
-            if tag == intent["tag"]:
-                return random.choice(intent['responses'])
-    
-    return "I do not understand..."
+    """Get response from the bibliometric expert system"""
+    try:
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": expert_prompt
+                },
+                {
+                    "role": "user",
+                    "content": msg
+                }
+            ],
+            model="mixtral-8x7b-32768",  # or another Groq model
+            temperature=0.3,
+            max_tokens=1024
+        )
+        return chat_completion.choices[0].message.content
+    except Exception as e:
+        print(f"Error with Groq API: {e}")
+        return "I encountered an error while processing your request. Please try again later."
 
 
 if __name__ == "__main__":
-    print("Let's chat! (type 'quit' to exit)")
+    print(f"Welcome to the {bot_name} assistant. Type 'quit' to exit.")
     while True:
-        # sentence = "do you use credit cards?"
         sentence = input("You: ")
-        if sentence == "quit":
+        if sentence.lower() == "quit":
             break
 
         resp = get_response(sentence)
-        print(resp)
-
+        print(f"{bot_name}: {resp}")

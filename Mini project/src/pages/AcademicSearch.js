@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from '../SearchBar';
 import Filters from '../Filters';
 import ResultsDisplay from '../ResultsDisplay';
+import config from '../config';
 
 const AcademicSearch = ({ darkMode }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +31,7 @@ const AcademicSearch = ({ darkMode }) => {
     if (!searchQuery) return;
     setLoading(true);
     try {
-      const apiUrl = new URL(`http://127.0.0.1:5000/api/journal`);
+      const apiUrl = new URL(`${config.API_URL}/api/journal`);
       apiUrl.searchParams.append('title', encodeURIComponent(searchQuery));
       
       // Add filters to URL
@@ -67,7 +68,7 @@ const AcademicSearch = ({ darkMode }) => {
     if (query) {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/api/journal/suggestions?title=${encodeURIComponent(query)}`
+          `${config.API_URL}/api/journal/suggestions?title=${encodeURIComponent(query)}`
         );
         if (response.ok) {
           const data = await response.json();

@@ -16,7 +16,7 @@ from groq import Groq
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": ["https://scholarsfriend.vercel.app", "http://localhost:3000"]}})
 
 # Configuration
 cache = TTLCache(maxsize=100, ttl=600)

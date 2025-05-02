@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import config from './config';
 
 const JournalMetrics = () => {
     const [journals, setJournals] = useState([
@@ -36,7 +37,7 @@ const JournalMetrics = () => {
             
             try {
                 const query = journal.issn ? `issn=${journal.issn}` : `title=${encodeURIComponent(journal.title)}`;
-                const response = await fetch(`http://127.0.0.1:5000/api/journal/metrics?${query}`);
+                const response = await fetch(`${config.API_URL}/api/journal/metrics?${query}`);
                 const data = await response.json();
                 
                 if (!response.ok) {

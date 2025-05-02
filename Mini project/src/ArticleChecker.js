@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from './config';
 
 const ArticleChecker = () => {
   const [inputName, setInputName] = useState('');
@@ -25,7 +26,7 @@ const ArticleChecker = () => {
     setShowSuggestions(false);
 
     try {
-      const response = await fetch('http://localhost:5000/api/check-article', {
+      const response = await fetch(`${config.API_URL}/api/check-article`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
